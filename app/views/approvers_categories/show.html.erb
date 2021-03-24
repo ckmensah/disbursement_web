@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Category name:</strong>
+  <%= @approvers_category.category_name %>
+</p>
+
+<p>
+  <strong>Client code:</strong>
+  <%= @approvers_category.client_code %>
+</p>
+
+<p>
+  <strong>Leveled:</strong>
+  <%= @approvers_category.leveled %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @approvers_category.user_id %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @approvers_category.status %>
+</p>
+
+<p>
+  <strong>Changed status:</strong>
+  <%= @approvers_category.changed_status %>
+</p>
+
+<%= link_to 'Edit', edit_approvers_category_path(@approvers_category) %> |
+<%= link_to 'Back', approvers_categories_path %>
+
+
+

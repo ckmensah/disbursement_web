@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  main_trans_id: MyString
+  final_status: false
+  is_reversal: false
+
+two:
+  main_trans_id: MyString
+  final_status: false
+  is_reversal: false

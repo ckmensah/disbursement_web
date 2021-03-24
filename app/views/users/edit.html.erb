@@ -1,0 +1,64 @@
+<div class="center" >
+  <center>
+
+    <br/>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-1">
+        <fieldset>
+          <legend>Edit User</legend>
+
+          <%= simple_form_for @user, url: update_user_path do |f| %>
+              <%= f.error_notification %>
+
+              <div class="form-inputs">
+                <%= f.input :username, required: true, autofocus: true,label: false,  placeholder: "Username",input_html:{class:"form-control",style:"width:50%;"} %>
+                <%= f.input :password, required: true, label: false, placeholder: "Password", hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length), input_html:{class:"form-control",style:"width:50%;"} %>
+                <%= f.input :password_confirmation, label: false, placeholder: "Confirm Password", required: true, input_html:{class:"form-control",style:"width:50%;"}%>
+
+                <%= f.input :email, required: true, autofocus: true,label: false, placeholder: "Email",input_html:{class:"form-control",style:"width:50%;"} %>
+                <%= f.input :lastname, required: true, autofocus: true,label: false, placeholder: "Lastname",input_html:{class:"form-control",style:"width:50%;"} %>
+                <%= f.input :other_names, autofocus: true,label: false, placeholder: "Other Names",input_html:{class:"form-control",style:"width:50%;"} %>
+                <%= f.input :mobile_number, required: true, label: false, placeholder: "Mobile Number",autofocus: true,input_html:{class:"form-control",style:"width:50%;"} %>
+                                <%#= f.input :current_password, hint: "we need your current password to confirm your changes",
+                            required: true,input_html:{class:"form-control",style:"width:50%;"} %>
+
+                <% if current_user.s_user? %>
+                    <%= f.input :role_id, collection: Role.where(role: ['Super User','Admin','User','Approver']), label_method: :role, value_method: :id, input_html:{class:"form-control",style:"width:50%;"} %>
+                <% elsif current_user.admin? %>
+                    <%= f.input :role_id, collection: Role.where(role: ['Admin','User','Approver']), label_method: :role, value_method: :id, input_html:{class:"form-control",style:"width:50%;"} %>
+                <% elsif current_user.ultra? %>
+                    <%= f.input :role_id, placeholder:"Role", label:false, collection: Role.all, label_method: :role, value_method: :id, input_html:{class:"form-control",style:"width:50%;"} %>
+                <% end %>
+                <%= f.input :client_code, collection: @clients, label_method: :company_name, value_method: :id, required: true, autofocus: true,input_html:{class:"form-control",style:"width:50%;"} %>
+
+                <%# if current_user.admin? %>
+                <%#= f.input :user_type_id, collection: UserType.find([1,2,3]), label_method: :type_name,
+                    value_method: :id,input_html:{class:"form-control",style:"width:50%;"} %>
+                <%# end %>
+
+                <%= f.input :creator_id, :as => :hidden, input_html:{value: current_user.id} %>
+
+              </div>
+
+              <div class="form-actions">
+                <%= f.button :submit, "Update", class: "btn btn-primary", style: "width:auto" %>
+                <%= link_to 'Back', users_path,class: "btn btn-danger", style: "width:auto"%>
+
+              </div>
+          <% end %>
+
+        </fieldset>
+      </div>
+    </div>
+  </center>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#changer').click(function () {
+            $('#show_pwd').removeClass('hidden');
+            $('.pwd').removeClass('hidden');
+            console.log('did work');
+        });
+    });
+</script>

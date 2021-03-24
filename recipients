@@ -1,0 +1,111 @@
+\d
+select * from roles;
+\d
+\d
+\d
+\d
+select * from activity_approvals;
+\d
+\d
+select * from service_test_numbers;
+\d
+select trxn_trans_type from matview_transactions_new1;
+\d
+\d matview_transactions_new1;
+drop view matview_transactions_new1;
+drop materialized view matview_transactions_new1;
+\d
+ \d
+\d
+\d matview_transactions_new1;
+\d
+select * from bank_swift;
+\d
+select * from callback_resps;
+\d
+select * from client_seq;
+select * from customer_auths;
+select * from approvers;
+select * from approver_seq 
+;
+select * from approvers_categories;
+select * from payouts;
+       \d
+select * from premium_clients;
+\d
+select * from recipient_groups;
+\d
+select * from trans_masters;
+select * from sent_callbacks;
+\d recipients;
+\d
+\d
+\d
+select * from entity_service_assigned_wallet;
+  select * from main_wallet_config;
+   \d main_wallet_config 
+\d
+\d
+select * from users;
+ select * from users where id = 9;
+select * from roles;
+\d
+select * from entity_infos;
+select * from entity_info;
+\d
+\d
+select * from assigned_fees;
+\d
+select * from entity_service;
+select entity_id from entity_service;
+  select * from assigned_fees where id = 1884;
+  select * from assigned_fees where id = 1891;
+select * from users where id = 4;
+delete from assigned_fees where id = 1891;
+delete from assigned_fees where id = 1884;
+\d
+\d
+  \d bank_swift
+select * from bank_swift;
+select * from main_wallet_config;
+\d
+select * from entity_account;
+select * from entity_service_account;
+select * from entity_service;
+select * from entity_service where id =122;
+select * from entity_info where id = 71;
+\d
+select * from entity_service;
+select 8 from entity_service_account;
+select * from entityt_service_account;
+select * from entity_service_account;
+\d entity_service_account;
+\d entity_service;
+\d
+select * from entity_service where service_name = 'Eastern Music Awards';
+\d entity_service_accounts;
+\d entity_service_account;
+select * from entity_service_accounts where entity_service_id = 122;
+select * from entity_service_account where entity_service_id = 122;
+select * from entity_service where service_name like 'eastern music';
+select * from entity_service where service_name like 'eastern music awards';
+select * from entity_service where service_name like 'Eastern Music Awards';
+\d
+select * from entity_service;
+select * from entity_service_account;
+\d
+\d transactions;
+\d callback_resps;
+select * from callback_resps;
+\d
+select * from transactions;
+select * from transactions limit = 10 created_at desc;
+select * from transactions limit = 10 where created_at desc;
+select * from transactions limit = 10 where created_at = desc;
+select * from transactions limit = 10;
+select * from transactions limit = 10;
+select * from transactions limit=10;
+select * from transactions limit 10;
+select * from transactions limit 10 created_at desc;
+select * from transactions limit 10 where created_at desc;
+\s recipients;

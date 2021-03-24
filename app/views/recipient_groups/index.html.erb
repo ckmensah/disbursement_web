@@ -1,0 +1,59 @@
+<div class="center">
+  <center>
+
+    <br/>
+
+    <div class="row">
+      <div class="col-md-8  col-md-offset-1">
+
+
+        <fieldset>
+          <legend>Recipient Groups</legend>
+
+          <table class="table table-striped table-hover table-bordered">
+
+            <tr id="head">
+
+              <th>Group Desc</th>
+              <th>Client</th>
+              <% if @user_app == true %>
+                <th>Approvers</th>
+              <% else %>
+              <% end %>
+              <th>Date</th>
+
+              <th colspan="2"></th>
+            </tr>
+
+            <% @recipient_groups.each do |recipient_group| %>
+
+              <tr>
+                <td><%= recipient_group.group_desc %></td>
+                <td><%= recipient_group.client.company_name if recipient_group.client %></td>
+                <% if @user_app == true %>
+                  <td><%= recipient_group.app_cat.category_name if recipient_group.app_cat %></td>
+                <% else %>
+                  <%#= f.input :approver_cat_id,label: "Approver Group",collection: @approver_cats, label_method: :category_name, value_method: :id,  required: true, autofocus: true, input_html:{class:"form-control",style:"width:50%;"} %>
+                <% end %>
+                <td><%= recipient_group.created_at.strftime("%F %R") %></td>
+                <!--<td><%#= recipient.user_id %></td>-->
+                <!--<td><%#= link_to 'Show', recipient , class:'"btn btn-success btn-sm btn3d"'%></td>-->
+                <td><%= link_to 'Edit', edit_recipient_group_path(recipient_group), class: '"btn btn-primary btn-sm btn3d"' %></td>
+                <td><%= link_to '+recipients', new_recipient_path(group_id: recipient_group.id), class: '"btn btn-success btn-sm btn3d"' %></td>
+
+              </tr>
+            <% end %>
+          </table>
+          <%= link_to 'New', new_recipient_group_path, class: 'btn btn-primary pull-left' %>
+
+          <%#= link_to 'New', new_recipient_path, class:'btn btn-primary pull-left'%>
+
+        </fieldset>
+        <div class="digg_pagination">
+          <%= will_paginate @transactions %>
+        </div>
+        <%#= will_paginate @recipients %>
+      </div>
+    </div>
+  </center>
+</div>

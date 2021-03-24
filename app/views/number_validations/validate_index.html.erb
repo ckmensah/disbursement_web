@@ -1,0 +1,155 @@
+<div class="w3-white w3-card w3-padding">
+
+  <div class="" style="text-align: center">
+    <% if @number_validations == [] %>
+      <%= simple_form_for @number_validation, :url =>(import_numbers_path(@number_validation, after_upload: "yes")), html: {:multipart => true, class: 'form-horizontal myForm'} do |f| %>
+        <%= f.error_notification %>
+
+        <div class="w3-container col-md-4 col-sm-12 col-lg-5 col-md-offset-4 w3-card-4 w3-middle w3-white w3-padding w3-round-xlarge">
+          <div class="w3-clear"></div>
+          <p style="font-size: 15px;">Click <b style="background-color: deepskyblue;  font-size: 17px;"><%= link_to "<i class='fa fa-'> Here </i>".html_safe, sample_csv_validation_path %></b> to download a sample csv file for number lookup.</p>
+          <br>
+          <div class="row form-inputs form-inline">
+            <%= file_field_tag :file, accept: '.csv',class: "form-control w3-padding border-input", height: "auto", style: "margin-left: 3%; width: 50%;", required: true, label: false, boolean_style: :inline %>
+            &#160;
+            <% if @number_validations == [] %>
+              <%= f.button :submit, 'Upload', class: "w3-btn w3-light-blue w3-round-xlarge w3-tiny", data: {confirm: "Do you wish to proceed?"}, id: "Fsubmit" %>
+            <% else %>
+              <%= f.button :submit, 'Upload', class: "w3-btn w3-light-blue w3-round-xlarge w3-tiny", disabled: true, id: "Fsubmit" %>
+            <% end %>
+          </div>
+      <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <br />
+  <div class="w3-clear"></div>
+
+  <div class="w3-left">
+    <% if @number_validations == [] %>
+    <% else %>
+      <%= link_to "Verify Numbers", final_validation_path,  data: {confirm: "You are about to validate a total of #{@number_validations.count} Mobile Numbers. Do you wish to proceed?", disable_with: "Please wait. This may take a while..."}, class: "w3-btn w3-light-blue w3-round-xlarge  w3-small w3-card" %>
+    <% end %>
+  </div>
+
+  <div class="w3-right">
+    <% if @number_validations == [] %>
+    <% else %>
+      <%= link_to 'Delete All', delete_numbers_path, data: {confirm: 'Are you sure?', :disable_with => "Please wait..."}, class: "w3-btn w3-red w3-round-xlarge w3-small w3-card" %>
+    <% end %>
+  </div>
+
+  <div class="row">
+    <div id="newDiv"></div>
+    <br>
+    <div class="w3-clear"></div>
+    <h4>Name LookUp </h4>
+<!--    <div class="col-md-6 col-xs-12 col-sm-12 col-md-offset-3">-->
+      <%#= flash_messages %>
+<!--    </div>-->
+    <div class="col-md-12 col-sm-12 col-xs-12 ">
+      <div class="w3-clear"></div>
+      <div class="table-responsive">
+        <table class="table table-condensed table-bordered table-striped w3-hoverable  w3-card">
+          <thead>
+          <tr class="table-head app-n-mob">
+            <th>No.</th>
+            <th>Mobile Number</th>
+            <th>Network</th>
+            <th>Date</th>
+            <!-- <th colspan="3"></th> -->
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @number_validations.each.with_index(@number_validations.offset + 1) do |transaction, index| %>
+            <tr>
+              <td><%= index  %></td>
+              <td><%= transaction.mobile_number  %></td>
+              <td><%= transaction.network %></td>
+              <td><%= transaction.created_at.strftime("%F %R")%></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+      <%= will_paginate @number_validations,  renderer: BootstrapPagination::Rails, previous_label: 'Older', next_label: 'Newer', class: "w3-right pagination-sm w3-card-4",  :params => { :controller => "number_validations", :action => "validate_index", per_page: params[:per_page], page: params[:page] } %>
+      <div class="w3-clear clearfix"></div>
+      <br>
+    </div>
+  </div>
+
+  <div class="w3-clear clearfix"></div>
+  <br>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $(".myForm").submit(function (e) {
+            //Prevent the form from submitting
+            e.preventDefault();
+            //Then disable submit button with 'Please wait...'
+            $("#Fsubmit").attr("disabled", true);
+            $("#Fsubmit").attr("value", "Please wait...");
+            //Now, submit the form
+            this.submit();
+        })
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        setTimeout(function(){
+            $('#notes').remove();
+        }, 4000);
+    })
+</script>
+
+<script>
+    function toggle(source) {
+        const checkboxes = document.getElementsByName('recipien[]');
+        for (let i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+        const checked = $('input[type="checkbox"]:checked').length;
+        if (checked < 1) {
+            $('input[type="submit"].del').addClass('w3-hide');
+        } else {
+            //   $('input[type="submit"]').removeClass('w3-hide');
+            $('input[type="submit"].del').removeClass('w3-hide');
+        }
+        console.log(checked);
+    }
+
+
+    $(document).ready(function () {
+        let checked;
+        $('input[type="checkbox"]').change(function () {
+            console.log('hey ' + checked);
+            $('input[type="checkbox"]').click(function () {
+                if ($(this).is(":checked")) {
+                    // alert("Checkbox is checked.");
+                    $('input[type="submit"]').removeClass('w3-hide');
+                    checked = $('input[type="checkbox"]:checked').length;
+                    $('#counting').text(checked).text(checked);
+                    console.log(checked);
+                    // alert(checked);
+                } else if ($(this).is(":not(:checked)")) {
+                    // alert("Checkbox is unchecked.");
+                    checked = $('input[type="checkbox"]:checked').length;
+                    if (checked < 1) {
+                        $('input[type="submit"].del').addClass('w3-hide');
+                    } else {
+                        //   $('input[type="submit"]').removeClass('w3-hide');
+                        $('input[type="submit"].del').removeClass('w3-hide');
+                    }
+                    console.log(checked);
+                }
+            });
+        });
+    });
+
+</script>

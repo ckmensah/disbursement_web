@@ -1,0 +1,68 @@
+<%= simple_form_for(@recipient) do |f| %>
+  <%= f.error_notification %>
+  <div style="float: left; width: 100%;">
+    <div class="row">
+      <% session[:group_id] = @group_id %>
+      <div class="col-md-3" style="padding-right: 4px">
+        <%= f.input :recipient_name, label: false, required: true, autofocus: true, placeholder: "Recipient Name", input_html: {class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
+      </div>
+
+      <div class="col-md-3" style="padding-right: 4px">
+        <%= f.input :mobile_number, label: false, required: true, autofocus: true, placeholder: "Mobile Number", input_html: {class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
+      </div>
+      <div class="col-md-2" style="padding-left: 4px; padding-right: 4px">
+        <%= f.input :network, label: false, collection: ["AIR", "MTN", "VOD", "TIG"].insert(0, '--network--'), selected: 0, placeholder: "Network", required: true, autofocus: true, input_html: {class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
+      </div>
+      <div class="col-md-2" style="padding-left: 4px; padding-right: 4px">
+        <%= f.input :amount, label: false, required: true, autofocus: true, placeholder: "Amount", input_html: {class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
+      </div>
+      <div class="col-md-2" style="padding-left: 4px; padding-right: 0px">
+        <%# unless @recipient.persisted? %>
+        <%= f.input :group_id, as: :hidden, input_html: {value: @group_id, class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
+        <%# end %>
+
+        <%# pass it on  %>
+      </div>
+      <%= f.input :client_code, as: :hidden, input_html: {value: current_user.client_code} %>
+      <%#= f.input :disburse_status, as: :hidden, input_html: {value: 0} %>
+
+      <%= f.input :user_id, as: :hidden, input_html: {value: current_user.id} %>
+
+
+      <div class="col-md-2 form-actions" style="padding-right: 0">
+        <% if @recipient.persisted? %>
+          <%= f.button :submit, "Edit", class: "btn btn-primary", style: "width:auto" %>
+        <% else %>
+          <%= f.button :submit, "Add", class: "btn btn-primary", style: "width:auto" %>
+        <% end %>
+      </div>
+    </div>
+
+
+<% end %>
+
+<% unless @recipient.persisted? %>
+  <% session[:group_id] = @group_id %>
+
+  <div id="bulk_recipients">
+
+    <%= render 'bulk_recipients' %>
+  </div>
+<% end %>
+</div>
+<% unless @recipient.persisted? %>
+  <hr>
+  <br>
+  <div id="recipients" style="width: 100%; margin-left: 0">
+    <%= render 'index' %>
+  </div>
+<% end %>
+
+<div class="form-actions">
+  <%= link_to 'Back', recipient_groups_path, class: "btn btn-danger", style: "width:auto" %>
+
+  <% if @failed_recipients.size > 0 %>
+    <%= link_to "Failed(#{@failed_recipients.size})", failed_path(group_id: @group_id), class: "btn btn-warning", style: "width:auto" %>
+  <% end %>
+
+</div>

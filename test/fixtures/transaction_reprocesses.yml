@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  old_trnx_id: MyString
+  new_trnx_id: MyString
+  amount: 9.99
+  status: false
+  auto: false
+  err_code: MyString
+  user_id: 1
+  nw_resp: MyString
+
+two:
+  old_trnx_id: MyString
+  new_trnx_id: MyString
+  amount: 9.99
+  status: false
+  auto: false
+  err_code: MyString
+  user_id: 1
+  nw_resp: MyString

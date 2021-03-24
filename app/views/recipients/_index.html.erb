@@ -1,0 +1,50 @@
+
+
+<legend>Recipients</legend>
+
+<table class="table table-striped table-hover table-bordered">
+
+  <tr id="head">
+    <th>Name</th>
+    <th>Mobile number</th>
+    <th>Network</th>
+    <th>Amount</th>
+    <% if @user_app.needs_approval %>
+      <th>Group</th>
+    <% elsif !@user_app.needs_approval %>
+    <% end %>
+
+
+    <% unless @payout and @payout.processed %>
+      <th colspan="1"></th>
+    <% end %>
+  </tr>
+  <% @recipients.each do |recipient| %>
+
+    <tr>
+      <td><%= recipient.recipient_name %></td>
+      <td><%= recipient.mobile_number %></td>
+      <td><%= recipient.network %></td>
+      <td><%= recipient.amount %></td>
+      <% if @user_app.needs_approval %>
+        <td><%= recipient.group.group_desc if recipient.group %></td>
+      <% elsif !@user_app.needs_approval %>
+      <% end %>
+
+
+      <td>
+        <% if not @payout or not @payout.processed and not (current_user.approver?) %>
+          <%= link_to 'Edit', edit_recipient_path(recipient,group_id: recipient.group_id), class: '"btn btn-primary btn-sm btn3d"' %>
+          <%= link_to 'Delete', recipient_path(recipient), method: :delete, data: {confirm: 'Are you sure?'}, class: '"btn btn-danger btn-sm btn3d"' %>
+        <% else %>
+          <%#=link_to 'Edit', '#',  class:"btn btn-primary btn-sm disabled"%>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+<%#= link_to 'New', new_recipient_path, class:'btn btn-primary pull-left'%>
+
+<%#= link_to 'New', new_recipient_path, class:'btn btn-primary pull-left'%>
+
+<%#= will_paginate @recipients %>

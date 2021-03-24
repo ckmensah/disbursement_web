@@ -1,0 +1,47 @@
+<div class="w3-container col-md-4 col-md-offset-4">
+  <legend>Editing Recipient</legend>
+  <%= simple_form_for(@recipient, :remote => true) do |f| %>
+    <%= f.error_notification %>
+
+
+    <!--    <div style="float: left; width: 100%; height: 100%;">-->
+    <div class="form-inputs">
+      <!--        <div class="col-md-3" style="padding-right: 4px">-->
+      <%= f.input :recipient_name, label: false, required: true, autofocus: true, placeholder: "Recipient Name", input_html: {class: "form-control"} %>
+      <!--        </div>-->
+
+      <!--        <div class="col-md-3" style="padding-right: 4px">-->
+      <%= f.input :mobile_number, label: false, required: true, autofocus: true, placeholder: "Mobile Number",as: :numeric,input_html: {class: "form-control",min: "0"} %>
+      <!--        </div>-->
+      <!--        <div class="col-md-2" style="padding-left: 4px; padding-right: 4px">-->
+      <%= f.input :network, label: false, collection: ["AIR", "MTN", "VOD", "TIG"].insert(0, '--network--'), placeholder: "Network", required: true, autofocus: true, input_html: {class: "form-control"} %>
+      <!--        </div>-->
+      <!--        <div class="col-md-2" style="padding-left: 4px; padding-right: 4px">-->
+      <%= f.input :amount, label: false, required: true, autofocus: true, placeholder: "Amount", as: :numeric, input_html: {class: "form-control",min: "0"} %>
+      <!--        </div>-->
+      <!--        <div class="col-md-2" style="padding-left: 4px; padding-right: 0px">-->
+      <%# unless @recipient.persisted? %>
+      <%#= f.input :group_id, as: :hidden, input_html:{value: @group_id, class:"form-control", style: "padding-left: 0; padding-right: 2px"}%>
+      <%# end %>
+
+      <%# pass it on  %>
+      <!--        </div>-->
+
+      <%#= f.input :user_id, as: :hidden , input_html:{value: current_user.id } %>
+      <%= f.input :client_code, as: :hidden, input_html: {value: current_user.client_code} %>
+      <%= f.input :disburse_status, as: :hidden, input_html: {value: 0} %>
+    </div>
+    <div class="w3-container" style="padding-right: 0">
+      <%# if @recipient.persisted? %>
+      <%#= f.button :submit, "Edit",class: "btn btn-primary", style: "width:auto" %>
+      <%# else %>
+      <%= f.button :submit, "Edit", class: "btn btn-primary", style: "width:auto" %>
+      <%#= f.button :submit, "Back", class: "btn btn-danger", style: "width:auto" %>
+      <%= link_to 'Back', new_transaction_path, class: "btn btn-danger", :remote => true %>
+      <%# end %>
+    </div>
+    <!--    </div>-->
+
+
+  <% end %>
+</div>

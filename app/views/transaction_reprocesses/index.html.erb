@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Transaction Reprocesses</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Old trnx</th>
+      <th>New trnx</th>
+      <th>Amount</th>
+      <th>Status</th>
+      <th>Auto</th>
+      <th>Err code</th>
+      <th>User</th>
+      <th>Nw resp</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @transaction_reprocesses.each do |transaction_reprocess| %>
+      <tr>
+        <td><%= transaction_reprocess.old_trnx_id %></td>
+        <td><%= transaction_reprocess.new_trnx_id %></td>
+        <td><%= transaction_reprocess.amount %></td>
+        <td><%= transaction_reprocess.status %></td>
+        <td><%= transaction_reprocess.auto %></td>
+        <td><%= transaction_reprocess.err_code %></td>
+        <td><%= transaction_reprocess.user_id %></td>
+        <td><%= transaction_reprocess.nw_resp %></td>
+        <td><%= link_to 'Show', transaction_reprocess %></td>
+        <td><%= link_to 'Edit', edit_transaction_reprocess_path(transaction_reprocess) %></td>
+        <td><%= link_to 'Destroy', transaction_reprocess, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Transaction reprocess', new_transaction_reprocess_path %>

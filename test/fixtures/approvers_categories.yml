@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  category_name: MyString
+  client_code: MyString
+  user_id: 1
+  status: false
+  changed_status: false
+
+two:
+  category_name: MyString
+  client_code: MyString
+  user_id: 1
+  status: false
+  changed_status: false

@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  trnx_id: MyString
+  mm_trnx_id: MyString
+  mobile_number: MyString
+  resp_code: MyString
+  network: MyString
+  status: false
+  resp_desc: MyString
+
+two:
+  trnx_id: MyString
+  mm_trnx_id: MyString
+  mobile_number: MyString
+  resp_code: MyString
+  network: MyString
+  status: false
+  resp_desc: MyString

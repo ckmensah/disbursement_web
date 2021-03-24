@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-md-8  col-md-offset-1">
+          <legend>Approvers Category</legend>
+
+          <table class="table table-striped table-hover table-bordered">
+
+            <tr id="head">
+
+              <th>Category Name</th>
+              <th>Client Code</th>
+              <th>Leveled</th>
+
+              <!--<th>Settlement Account</th>-->
+              <!--<th>Collection Account</th>-->
+
+
+              <th colspan="1"></th>
+            </tr>
+            <% @approvers_categories.each do |approvers_category| %>
+
+                <tr>
+                  <td><%= approvers_category.category_name %></td>
+                  <td><%= approvers_category.client_code %></td>
+                  <td><%= approvers_category.leveled %></td>
+
+                  <!--<td><%#= link_to 'Show', approvers_category , class:'"btn btn-success btn-sm btn3d"'%></td>-->
+                  <%#if current_user.admin? %>
+                <td><%=link_to 'Edit', edit_approvers_category_path(approvers_category),  class:'"btn btn-primary btn-sm btn3d"',remote: true%></td>
+                 <%#end %>
+                </tr>
+            <% end %>
+          </table>
+    <%#if current_user.admin? %>
+          <%= link_to 'New', new_approvers_category_path, class:'btn btn-primary pull-left',remote: true%>
+      <%# end %>
+</div>
+    </div>

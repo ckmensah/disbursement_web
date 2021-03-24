@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Mobile number:</strong>
+  <%= @number_validation.mobile_number %>
+</p>
+
+<p>
+  <strong>Network:</strong>
+  <%= @number_validation.network %>
+</p>
+
+<p>
+  <strong>Group:</strong>
+  <%= @number_validation.group_id %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @number_validation.status %>
+</p>
+
+<p>
+  <strong>Changed status:</strong>
+  <%= @number_validation.changed_status %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @number_validation.user_id %>
+</p>
+
+<p>
+  <strong>Recipient name:</strong>
+  <%= @number_validation.recipient_name %>
+</p>
+
+<p>
+  <strong>Client code:</strong>
+  <%= @number_validation.client_code %>
+</p>
+
+<p>
+  <strong>Csv upload:</strong>
+  <%= @number_validation.csv_upload_id %>
+</p>
+
+<%= link_to 'Edit', edit_number_validation_path(@number_validation) %> |
+<%= link_to 'Back', number_validations_path %>

@@ -1,0 +1,280 @@
+<nav class="navbar navbar-inverse w3-white w3-border-white" role="navigation" style="margin-bottom: 0; border-radius: 0">
+  <div class="col-md-10 col-md-offset-1">
+    <% if user_signed_in? %>
+      <% name = current_user.is_client ? current_user.client.company_name : "DISBURSEMENT" %>
+      <div class="logo"><%= link_to "#{name}", root_path, class: 'logo w3-text-orange w3-hover-text-purple' %></div>
+    <% else %>
+      <div class="logo"><%= link_to 'DISBURSEMENT', '#', class: 'logo' %></div>
+    <% end %>
+    <% if user_signed_in? %>
+      <ul class="nav navbar-nav navbar-right">
+
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle active w3-white w3-text-black" data-toggle="dropdown" role="button" aria-haspopup="true"
+             aria-expanded="false"><%= current_user.username %><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+
+            <li>
+              <%= link_to "Edit Account", edit_user_registration_path(current_user) %>
+            </li>
+
+            <li>
+              <%= link_to "Log out", destroy_user_session_path, :method => 'delete' %>
+            </li>
+          </ul>
+
+        </li>
+
+        <%= render 'layouts/navigation_links' %>
+      </ul>
+    <% end %>
+  </div>
+</nav>
+
+<% if user_signed_in? %>
+  <% if @user_app.present? || !@user_app.nil? %>
+    <% if @user_app.needs_approval && current_user.is_client %>
+      <nav class="navbar navbar-inverse sidebar" role="navigation">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <p class="navbar-brand"></p>
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+            <ul class="nav navbar-nav nav2">
+              <li class="active">
+                <a href="<%= root_url %>">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a>
+              </li>
+              <li>
+                <a href="<%= payouts_path %>">Payout<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-credit-card"></span></a>
+              </li>
+              <li>
+                <a href="<%= transactions_path %>">Transactions<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-transfer"></span></a>
+              </li>
+
+              <% if current_user.ultra? || current_user.s_user? || current_user.admin? %>
+                <li class="dropdown">
+
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Set Ups
+                    <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
+                  <ul class="dropdown-menu forAnimate" role="menu">
+                    <% if current_user.ultra? || current_user.s_user? %>
+                      <li><a href="<%= premium_clients_path %>">Clients</a></li>
+                    <% end %>
+
+                    <% if @user_app.needs_approval %>
+                      <li><a href="<%= approvers_categories_path %>">Approvers</a></li>
+                    <% elsif !@user_app.needs_approval %>
+
+                    <% end %>
+
+                    <li><a href="<%= users_path %>">Users</a></li>
+                    <li><a href="<%= recipient_groups_path %>">Recipients</a></li>
+<!--                    <li><a href="<%#= validation_index_path %>">Number Validation</a></li>-->
+
+
+                  </ul>
+                </li>
+
+              <% elsif current_user.user? %>
+                <li class="dropdown">
+
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Set Ups
+                    <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
+                  <ul class="dropdown-menu forAnimate" role="menu">
+
+                    <li><a href="<%= recipient_groups_path %>">Recipients</a></li>
+
+
+                  </ul>
+                </li>
+              <% end %>
+
+            </ul>
+          </div>
+        </div>
+      </nav>
+    <% elsif !@user_app.needs_approval && current_user.is_client %>
+
+
+    <% else %>
+      <nav class="navbar navbar-inverse sidebar" role="navigation">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <p class="navbar-brand"></p>
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+            <ul class="nav navbar-nav nav2">
+              <li class="active">
+                <a href="<%= root_url %>">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a>
+              </li>
+              <li>
+                <a href="<%= payouts_path %>">Payout<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-credit-card"></span></a>
+              </li>
+              <li>
+                <a href="<%= transactions_path %>">Transactions<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-transfer"></span></a>
+              </li>
+
+              <% if current_user.ultra? || current_user.s_user? || current_user.admin? %>
+                <li class="dropdown">
+
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Set Ups
+                    <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
+                  <ul class="dropdown-menu forAnimate" role="menu">
+                    <% if current_user.ultra? || current_user.s_user? %>
+                      <li><a href="<%= premium_clients_path %>">Clients</a></li>
+                    <% end %>
+
+                    <% if @user_app.needs_approval %>
+                      <li><a href="<%= approvers_categories_path %>">Approvers</a></li>
+                    <% elsif !@user_app.needs_approval %>
+
+                    <% end %>
+
+                    <li><a href="<%= users_path %>">Users</a></li>
+                    <li><a href="<%= recipient_groups_path %>">Recipients</a></li>
+                    <li><a href="<%= validate_index_path %>">Number Validation</a></li>
+
+
+                  </ul>
+                </li>
+
+              <% elsif current_user.user? %>
+                <li class="dropdown">
+
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Set Ups
+                    <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
+                  <ul class="dropdown-menu forAnimate" role="menu">
+
+                    <li><a href="<%= recipient_groups_path %>">Recipients</a></li>
+
+
+                  </ul>
+                </li>
+              <% end %>
+
+            </ul>
+          </div>
+        </div>
+      </nav>
+    <% end %>
+  <% else %>
+    <nav class="navbar navbar-inverse sidebar" role="navigation">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <p class="navbar-brand"></p>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+          <ul class="nav navbar-nav nav2">
+            <li class="active">
+              <a href="<%= root_url %>">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a>
+            </li>
+            <li>
+              <a href="<%= payouts_path %>">Payout<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-credit-card"></span></a>
+            </li>
+            <li>
+              <a href="<%= transactions_path %>">Transactions<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-transfer"></span></a>
+            </li>
+
+            <% if current_user.ultra? || current_user.s_user? || current_user.admin? %>
+              <li class="dropdown">
+
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Set Ups
+                  <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
+                <ul class="dropdown-menu forAnimate" role="menu">
+                  <% if current_user.ultra? || current_user.s_user? %>
+                    <li><a href="<%= premium_clients_path %>">Clients</a></li>
+                  <% end %>
+
+                  <% if @user_app.present? || !@user_app.nil? %>
+                    <% if @user_app.needs_approval %>
+                      <li><a href="<%= approvers_categories_path %>">Approvers</a></li>
+                    <% elsif !@user_app.needs_approval %>
+
+                    <% end %>
+                  <% else %>
+                  <% end %>
+                  <li><a href="<%= users_path %>">Users</a></li>
+                  <li><a href="<%= recipient_groups_path %>">Recipients</a></li>
+                  <li><a href="<%= validate_index_path %>">Number Validation</a></li>
+
+
+                </ul>
+              </li>
+
+            <% elsif current_user.user? %>
+              <li class="dropdown">
+
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Set Ups
+                  <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
+                <ul class="dropdown-menu forAnimate" role="menu">
+
+                  <li><a href="<%= recipient_groups_path %>">Recipients</a></li>
+
+
+                </ul>
+              </li>
+            <% end %>
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+  <% end %>
+<% end %>
+
+<script>
+    function htmlbodyHeightUpdate() {
+        var height3 = $(window).height();
+        var height1 = $('.nav2').height() + 50;
+        console.log("height1: " + height1);
+
+        height2 = $('.main').height();
+        console.log("height2: " + height2);
+        console.log('height3: ' + height3);
+        if (height2 > height3) {
+            $('html').height(Math.max(height1, height3, height2) + 10);
+            $('body').height(Math.max(height1, height3, height2) + 10);
+        } else {
+            $('html').height(Math.max(height1, height3, height2));
+            $('body').height(Math.max(height1, height3, height2));
+        }
+
+    }
+
+    $(document).ready(function () {
+        htmlbodyHeightUpdate();
+        $(window).resize(function () {
+            htmlbodyHeightUpdate();
+        });
+        $(window).scroll(function () {
+            height2 = $('.main').height();
+            htmlbodyHeightUpdate();
+        });
+    });
+
+</script>

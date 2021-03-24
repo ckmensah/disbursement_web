@@ -1,0 +1,83 @@
+
+<div class="center"  >
+  <center>
+
+    <br/>
+    <div class="row">
+      <div class="col-md-8  col-md-offset-1">
+
+        <div style="width: 90%">
+          <div class="search_box">
+            <%=form_tag users_path, method: :get, input_html:{display:"block"} do %>
+                <div style="display: block">
+                  <div class="row">
+                    <!--<div class="pull-left search-pad"><input id="name" type="radio" name="search_param" value="name" checked="checked" style="width:auto;"/>Name</div>-->
+                    <div class="col-md-12">
+                      <input id="search-field" class="form-control" placeholder="Name" name="name"/>
+                    </div>
+
+                    <div class="col-md-12">
+                      <input id="search-field" class="form-control" placeholder="Username" name="username"/>
+                    </div>
+
+                    <div class="col-md-12">
+                      <input id="search-field" class="form-control" placeholder="Role" name="role"/>
+                    </div>
+
+                  </div>
+
+                  <%#= input :name_value, label:false, input_html:{  display:"inline",class:"form-control",placeholder:"contact's name",name:"name_value"} %>
+                  <input id="search-btn" type="submit" value="Filter" class="btn btn-primary search-btn">
+
+                </div>
+
+            <% end %>
+          </div>
+
+        </div>
+
+        <div class="display-div" style="width: 90%;">
+          Display::
+          <%= select_tag :per_page, options_for_select([30,40,50,70,100], params[:per_page].to_i),:onchange => "if(this.value){window.location='?per_page='+this.value;}", style:"width: 50px", id:"record" %>
+        </div>
+
+
+        <fieldset>
+          <legend>Users</legend>
+
+          <table class="table table-striped table-hover table-bordered">
+
+            <tr id="head">
+
+              <th>Name</th>
+              <th>Username</th>
+              <th>Role</th>
+
+
+              <th colspan="3"></th>
+            </tr>
+            <% @users.each do |user| %>
+
+                <tr>
+                  <td><%= "#{user.other_names} #{user.lastname}" %></td>
+                  <td><%= user.username %></td>
+                  <td><%= user.role.role if user.role %></td>
+                  <td><%= link_to 'Show', user_path(user.id) , class:'"btn btn-success btn-sm btn3d"'%></td>
+                  <td><%=link_to 'Edit', edit_user_path(user.id),  class:'"btn btn-primary btn-sm btn3d"'%></td>
+                  <td><%= link_to 'Delete', user_path(user.id), method: :delete, data: { confirm: 'Are you sure?' }, class:'"btn btn-danger btn-sm btn3d"' %></td>
+                </tr>
+            <% end %>
+          </table>
+          <%= link_to 'New', new_user_path, class:'btn btn-primary pull-left'%>
+
+          <%#= link_to 'New', new_user_path, class:'btn btn-primary pull-left'%>
+
+        </fieldset>
+        <div class="digg_pagination">
+          <%= will_paginate @users %>
+        </div>
+
+      </div>
+    </div>
+  </center>
+</div>

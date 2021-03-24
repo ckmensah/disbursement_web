@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Payout Approvals</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Payout</th>
+      <th>Approver code</th>
+      <th>Approved</th>
+      <th>Status</th>
+      <th>Notified</th>
+      <th>Level</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @payout_approvals.each do |payout_approval| %>
+      <tr>
+        <td><%= payout_approval.payout_id %></td>
+        <td><%= payout_approval.approver_code %></td>
+        <td><%= payout_approval.approved %></td>
+        <td><%= payout_approval.status %></td>
+        <td><%= payout_approval.notified %></td>
+        <td><%= payout_approval.level %></td>
+        <td><%= link_to 'Show', payout_approval %></td>
+        <td><%= link_to 'Edit', edit_payout_approval_path(payout_approval) %></td>
+        <td><%= link_to 'Destroy', payout_approval, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Payout approval', new_payout_approval_path %>

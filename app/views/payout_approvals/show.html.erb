@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Payout:</strong>
+  <%= @payout_approval.payout_id %>
+</p>
+
+<p>
+  <strong>Approver code:</strong>
+  <%= @payout_approval.approver_code %>
+</p>
+
+<p>
+  <strong>Approved:</strong>
+  <%= @payout_approval.approved %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @payout_approval.status %>
+</p>
+
+<p>
+  <strong>Notified:</strong>
+  <%= @payout_approval.notified %>
+</p>
+
+<p>
+  <strong>Level:</strong>
+  <%= @payout_approval.level %>
+</p>
+
+<%= link_to 'Edit', edit_payout_approval_path(@payout_approval) %> |
+<%= link_to 'Back', payout_approvals_path %>

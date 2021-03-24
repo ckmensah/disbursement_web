@@ -1,0 +1,34 @@
+
+    <div class="row">
+      <div class="col-md-8  col-md-offset-1">
+
+
+        <fieldset>
+          <legend>Disbursement Approvers</legend>
+
+          <table class="table table-striped table-hover table-bordered">
+
+            <tr id="head">
+              <th>Approver</th>
+              <th>Category</th>
+              <!--<th>Level</th>-->
+              <th colspan="1"></th>
+            </tr>
+            <% @approvers.each do |approver| %>
+                <tr>
+                  <td><%= "#{approver.user.other_names} #{approver.user.lastname}" if approver.user %></td>
+                  <td><%= approver.category.category_name if approver.category %></td>
+                  <!--<td><%#= approver.level %></td>-->
+                  <td><%=link_to 'Edit', edit_approver_path(approver),  class:'"btn btn-primary btn-sm btn3d"',remote: true%></td>
+                </tr>
+            <% end %>
+          </table>
+          <%= link_to 'New', new_approver_path, class:'btn btn-primary pull-left',remote: true%>
+
+          <%#= link_to 'New', new_approver_path, class:'btn btn-primary pull-left'%>
+
+        </fieldset>
+        <%#= will_paginate @approvers %>
+      </div>
+    </div>
+

@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  mobile_number: MyString
+  network: MyString
+  amount: 
+  group_id: 1
+  status: false
+  changed_status: false
+  disburse_status: false
+  transaction_id: MyString
+  fail_reason: MyText
+  user_id: 1
+
+two:
+  mobile_number: MyString
+  network: MyString
+  amount: 
+  group_id: 1
+  status: false
+  changed_status: false
+  disburse_status: false
+  transaction_id: MyString
+  fail_reason: MyText
+  user_id: 1

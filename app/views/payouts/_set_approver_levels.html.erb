@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+          <legend>Set Levels</legend>
+
+          <table class="table table-striped table-hover">
+
+            <tr id="head">
+
+              <th>Approver</th>
+              <th>Level</th>
+            </tr>
+            <% @approvers.each_with_index do |approver, index| %>
+
+                <tr>
+                  <td><%= "#{approver.user.other_names} #{approver.user.lastname}" %></td>
+
+                  <td>
+
+                    <input name="approval[<%= approver.approver_code %>]" type="text" placeholder="<%= index+1 %>"/></td>
+
+                  <% end %>
+                </tr>
+
+          </table>
+      </div>
+    </div>

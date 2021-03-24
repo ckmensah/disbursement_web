@@ -1,0 +1,66 @@
+<%#= simple_form_for(@recipient, url: trans_recipients_import_path, :data => { :remote => true}, html: {:multipart => true}) do |f| %>
+<%#= simple_form_for(@transaction, :url => trans_recipients_import_path) do |f| %>
+
+<!--<div id="payout_modal">-->
+<% if @recipients == [] %>
+  <%= simple_form_for @recipient, :url => (trans_recipients_import_path(@recipient, after_upload: "yes")), html: {:multipart => true, class: 'form-horizontal myForm'} do |f| %>
+    <%= f.error_notification %>
+
+    <div class="mg-t-20">
+      <p style="font-size: 15px">Click <%= link_to 'Here', sample_csv_path %> to download a sample csv file. Kindly
+        make sure your csv file to upload follows the same format.</p>
+      <div class="form-layout">
+        <div class="row" style="margin-left: 0%">
+          <div class="col-lg-8">
+            <div class="form-group form-inline">
+              <!--            <input class="form-control" type="text" name="rname" placeholder="Upload file">-->
+              <%= file_field_tag :file, accept: '.csv', require: true, class: "form-control", label: false, boolean_style: :inline, input_html: {class: "form-control", height: "auto", style: "margin-left: 4%"} %>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+              <%=f.input :reference, require: true, class: "form-control", label: false, boolean_style: :inline, placeholder: 'Reference', input_html: {class: "form-control", height: "auto", style: "margin-left: 4%"} %>
+
+            </div>
+          </div>
+          <% if @recipients == [] %>
+            <div class="col-lg-3">
+              <%= f.button :submit, 'Done', class: "w3-btn w3-text-white btn-block", style: "background-color: #f95f35 !important;", data: {confirm: "Do you wish to proceed?"}, id: "Fsubmit" %>
+            </div>
+            <%#= link_to 'Done', "#reports", :data => {toggle: 'modal'}, class: 'w3-btn w3-green w3-small w3-ripple w3-round-xlarge' %>
+          <% else %>
+            <%#= link_to 'Done', class: 'w3-btn w3-disabled w3-green w3-small w3-ripple w3-round-xlarge' %>
+            <div class="col-lg-3">
+              <%= f.button :submit, 'Done', class: "w3-btn w3-text-white btn-block", style: "background-color: #f95f35 !important;", disabled: true, id: "Fsubmit" %>
+            </div>
+          <% end %>
+          <!--          <div class="col-lg-3">-->
+          <!--                      <button class="btn btn-primary btn-block">Done</button>-->
+
+          <%#= f.button :submit, 'Done', class: "btn btn-success", data: {confirm: "Do you wish to proceed?", disable_with: "Please wait..."}, id: "Fsubmit" %>
+          <!--          </div>-->
+        </div>
+      </div>
+    </div><!-- container -->
+
+
+  <% end %>
+<% else %>
+<% end %>
+<!--</div>-->
+
+<script>
+    $(document).ready(function () {
+        $(".myForm").submit(function (e) {
+            //This comment is for the owner of this application #####SHITO#####
+
+            //First, prevent the form from submitting
+            e.preventDefault();
+
+            //Then disable submit button with 'Please wait...'
+            $("#Fsubmit").attr("disabled", true);
+            $("#Fsubmit").attr("value", "Please wait...");
+
+            //Now, submit the form
+            this.submit();
+
+        })
+    });
+</script>

@@ -1,0 +1,125 @@
+<div class="section-wrapper mg-t-20">
+  <h4>Recipient Validation</h4>
+  <% if flash[:notice] %>
+    <p class="alert alert-success w3-margin-left w3-margin-right" id="notes" style = "text-align: center" ><%= notice %></p>
+  <%end%>
+
+  <% if @recipients == [] %>
+  <% else %>
+    <p style="font-size: 15px"> Click on <strong style="color: red">Validate</strong> below to see the actual names of the recipients uploaded recipients.</p>
+  <% end %>
+
+  <% logger.info "#{@recipients.inspect}" %>
+
+  <div class="table-responsive">
+    <% if @recipients == [] %>
+      <%#= button_to 'Delete All', delete_all_path, data: {confirm: 'Are you sure?', :disabled => true}, :remote => true, class: "btn btn-danger w3-left", style: "background-color: #DC3545!important;" %>
+    <% else %>
+      <%#= link_to 'Delete All', delete_all_path, data: {confirm: 'Are you sure?', :disable_with => "Please wait..."}, :remote => true, class: "btn btn-danger w3-left", style: "background-color: #DC3545!important;" %>
+    <% end %>
+    <br>
+    <br>
+    <table class="table table-bordered table-responsive table-condensed mg-b-0">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Mobile number</th>
+        <th>Network</th>
+        <%# if @user_app.needs_approval %>
+<!--          <th>Group</th>-->
+        <%# elsif !@user_app.needs_approval %>
+        <%# end %>
+      </tr>
+      </thead>
+      <tbody>
+      <%# count = 0 %>
+      <% @recipients.each.with_index(@recipients.offset + 1) do |recipient, index| %>
+
+        <%# count = count + 1 %>
+        <tr>
+
+<!--    <td>-->
+<!--      <strong><%#= check_box_tag 'recipien[]', recipient.id, @recipients.include?(recipient.id), {array: true, class: "check_box", style: "display:block", id: 'checkInd'} %></strong>-->
+<!--    </td>-->
+          <td><%=index %></td>
+          <td><%= recipient.mobile_number %></td>
+          <td><%= recipient.network %></td>
+          <%# if @user_app.needs_approval %>
+<!--            <td><%#= recipient.group.group_desc if recipient.group %></td>-->
+          <%# elsif !@user_app.needs_approval %>
+          <%# end %>
+
+
+          <!--            <td>-->
+          <%# if not @payout or not @payout.processed and not (current_user.approver?) %>
+          <%#= link_to 'Edit', edit_recipient_path(recipient), class: '"btn btn-primary btn-sm btn3d"', :remote => true %>
+          <%#= link_to 'Delete', recipient_path(recipient), method: :delete, data: {confirm: 'Are you sure?'}, :remote => true, class: '"btn btn-danger btn-sm btn3d"' %>
+          <%# else %>
+
+          <%#=link_to 'Edit', '#',  class:"btn btn-primary btn-sm disabled"%>
+          <%# end %>
+          <!--            </td>-->
+        </tr>
+      <% end %>
+
+
+      </tbody>
+    </table>
+    <%# end %>
+  </div><!-- table-responsive -->
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        setTimeout(function(){
+            $('#notes').remove();
+        }, 4000);
+    })
+</script>
+
+<script>
+    function toggle(source) {
+        const checkboxes = document.getElementsByName('recipien[]');
+        for (let i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+        const checked = $('input[type="checkbox"]:checked').length;
+        if (checked < 1) {
+            $('input[type="submit"].del').addClass('w3-hide');
+        } else {
+            //   $('input[type="submit"]').removeClass('w3-hide');
+            $('input[type="submit"].del').removeClass('w3-hide');
+        }
+        console.log(checked);
+    }
+
+
+    $(document).ready(function () {
+        let checked;
+        $('input[type="checkbox"]').change(function () {
+            console.log('hey ' + checked);
+            $('input[type="checkbox"]').click(function () {
+                if ($(this).is(":checked")) {
+                    // alert("Checkbox is checked.");
+                    $('input[type="submit"]').removeClass('w3-hide');
+                    checked = $('input[type="checkbox"]:checked').length;
+                    $('#counting').text(checked).text(checked);
+                    console.log(checked);
+                    // alert(checked);
+                } else if ($(this).is(":not(:checked)")) {
+                    // alert("Checkbox is unchecked.");
+                    checked = $('input[type="checkbox"]:checked').length;
+                    if (checked < 1) {
+                        $('input[type="submit"].del').addClass('w3-hide');
+                    } else {
+                        //   $('input[type="submit"]').removeClass('w3-hide');
+                        $('input[type="submit"].del').removeClass('w3-hide');
+                    }
+                    console.log(checked);
+                }
+            });
+        });
+    });
+
+</script>

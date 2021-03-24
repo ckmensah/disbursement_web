@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Mobile number:</strong>
+  <%= @recipient.mobile_number %>
+</p>
+
+<p>
+  <strong>Network:</strong>
+  <%= @recipient.network %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= @recipient.amount %>
+</p>
+
+<p>
+  <strong>Group:</strong>
+  <%= @recipient.group_id %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @recipient.status %>
+</p>
+
+<p>
+  <strong>Changed status:</strong>
+  <%= @recipient.changed_status %>
+</p>
+
+<%= link_to 'Edit', edit_recipient_path(@recipient) %> |
+<%= link_to 'Back', recipients_path %>

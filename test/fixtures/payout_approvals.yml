@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  payout_id: 1
+  approver_code: MyString
+  approved: false
+  status: false
+  notified: false
+  level: 1
+
+two:
+  payout_id: 1
+  approver_code: MyString
+  approved: false
+  status: false
+  notified: false
+  level: 1

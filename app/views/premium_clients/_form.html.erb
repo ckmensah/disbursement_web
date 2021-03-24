@@ -1,0 +1,36 @@
+<%= simple_form_for(@premium_client,html: { autocomplete: 'off' }) do |f| %>
+    <%= f.error_notification %>
+    <% if @premium_client.persisted? %>
+        <% session[:client_code] = @premium_client.client_code %>
+    <% else %>
+        <% session[:client_code]  = PremiumClient.generate_client_code %>
+    <% end %>
+    <div class="form-inputs">
+      <%= f.input :client_code, as: :hidden, input_html:{value: session[:client_code]} %>
+
+      <%= f.input :company_name, required: true, autofocus: true, label:false, placeholder:"Company Name", input_html:{class:"form-control",style:"width:50%;"} %>
+      <%= f.input :email, required: true, autofocus: true,label:false, placeholder:"Email", input_html:{class:"form-control",style:"width:50%;"} %>
+      <%#= f.input :client_code, required: true, autofocus: true,input_html:{class:"form-control",style:"width:50%;"} %>
+      <%= f.input :contact_number, required: true, label:false, placeholder:"Contact Number", autofocus: true,input_html:{class:"form-control",style:"width:50%;"} %>
+      <%#= f.input :settlement_account, required: true, autofocus: true,input_html:{class:"form-control",style:"width:50%;"} %>
+      <%#= f.input :collection_account, required: true, autofocus: true, input_html:{class:"form-control",style:"width:50%;"} %>
+      <%= f.input :user_id, as: :hidden , input_html:{value: current_user.id } %>
+      <%= f.input :client_id, label:false, placeholder:"Service ID", required: true, input_html:{class:"form-control",style:"width:50%;"}%>
+      <%= f.input :client_key, label:false, placeholder:"Client Key",  input_html:{class:"form-control",style:"width:50%;"}%>
+      <%= f.input :secret_key, label:false, placeholder:"Secret Key",  input_html:{class:"form-control",style:"width:50%;"}%>
+      <%= f.input :sender_id, label:false, placeholder:"Sender ID",  input_html:{class:"form-control",style:"width:50%;"}%>
+      <%= f.input :sms_key, label:false, placeholder:"SMS Key",as: :hidden,  input_html:{class:"form-control",style:"width:50%;"}%>
+      <%= f.input :acronym, label:false, placeholder:"Acronym",  input_html:{class:"form-control",style:"width:50%;"}%>
+      <%= f.input :success_msg, label:false, placeholder:"Success Message", as: :hidden, input_html:{class:"form-control",style:"width:50%;"}%>
+      <%= f.label :needs_approval, "Needs Approval" %>
+      <%= f.check_box :needs_approval %>
+
+
+    </div>
+
+    <div class="form-actions">
+      <%= f.button :submit, "Submit", class: "btn btn-primary", style: "width:auto" %>
+      <%= link_to 'Back', premium_clients_path,class: "btn btn-danger", style: "width:auto"%>
+    </div>
+<% end %>
+

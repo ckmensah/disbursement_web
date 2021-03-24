@@ -1,0 +1,77 @@
+
+
+
+
+
+
+<div class="center" >
+  <center>
+
+    <br/>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-2">
+        <fieldset>
+          <legend>Details</legend>
+          <table class="table table-striped table-hover table-bordered">
+            <tr>
+              <td id="details-table" >Company</td>
+              <td><%= @premium_client.company_name %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Email</td>
+              <td><%= @premium_client.email %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Client Code</td>
+              <td><%= @premium_client.client_code %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Contact Number</td>
+              <td><%= @premium_client.contact_number %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Acronym</td>
+              <td><%= @premium_client.acronym %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Service ID</td>
+              <td><%= @premium_client.client_id %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Sender ID</td>
+              <td><%= @premium_client.sender_id %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Client Key</td>
+              <td><%= @premium_client.client_key %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Secret Key</td>
+              <td><%= @premium_client.secret_key %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Needs Approval</td>
+              <td><%= @premium_client.needs_approval %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Success Message</td>
+              <td><%= @premium_client.success_msg %></td>
+            </tr>
+
+          </table>
+          <%= link_to 'Back', premium_clients_path, class:'btn btn-danger' %>
+        </fieldset>
+      </div>
+    </div>
+  </center>
+</div>

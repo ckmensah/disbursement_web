@@ -1,0 +1,54 @@
+<div class="w3-container">
+  <div class="slim-mainpanel w3-center">
+    <div class="container">
+      <div class="slim-pageheader">
+<!--        <ol class="breadcrumb slim-breadcrumb">-->
+<!--          <li class="breadcrumb-item" ><a href="/" style = "color: #f95f35 !important;">Home</a></li>-->
+<!--          <li class="breadcrumb-item active" aria-current="page">New Payout</li>-->
+<!--        </ol>-->
+        <h6 class="slim-pagetitle">Number Verification</h6>
+      </div>
+
+      <div id="bulk_recipients">
+        <%= render 'transactions/bulk_recipients' %>
+      </div>
+
+      <div id="recipients">
+        <%= render 'transactions/index' %>
+      </div>
+
+
+      <div class="row mt-3 w3-center">
+        <% if @recipients == [] %>
+        <% else %>
+          <div class="col-lg-3">
+            <%#= link_to 'Vaerify', verify_numbers_path, :onclick => "alert('Insufficent Balance. Please fund your wallet and try again!')", class: "w3-btn w3-text-white btn-block", style: "background-color: #1c9a06 !important;" %>
+
+
+
+            <!--            <button class="btn btn-success btn-block">Payout</button>-->
+            <%#= link_to 'Payout', disburse_money_path(client_code: current_user.client_code, disburse_type: 'CR'), data: {confirm: "You are about to disburse funds, do you wish to proceed?", disable_with: "Please wait..."}, class: "btn btn-success btn-block" %>
+            <%# if @recipients_total_amount.to_f < @get_current_balance['payout_bal'].to_f %>
+              <%#= link_to 'Payout', disburse_money_path(client_code: current_user.client_code, disburse_type: 'CR'), data: {confirm: "You are about to Pay Out to\nNumber of Recipients: #{@recipients_count}\nTotal Amount: GHS #{@recipients_total_amount.to_f}\nWallet Balance: GHs #{@get_current_balance['payout_bal']}\nDo you wish to proceed?", disable_with: "Please wait..."}, class: "w3-btn w3-text-white btn-block", style: "background-color: #1c9a06 !important;" %>
+              <%#= link_to 'Payout', '/', data: {confirm: "You are about to Pay Out to\nNumber of Recipients: #{@recipients_count}\nTotal Amount: GHS #{@recipients_total_amount.to_f}\nWallet Balance: GHs #{@get_current_balance['payout_bal']}\nDo you wish to proceed?", disable_with: "Please wait..."}, class: "w3-btn w3-text-white btn-block", style: "background-color: #1c9a06 !important;" %>
+            <%# else %>
+              <%#= link_to 'Payout', '#', :onclick => "alert('Insufficent Balance. Please fund your wallet and try again!')", class: "w3-btn w3-text-white btn-block", style: "background-color: #1c9a06 !important;" %>
+            <%# end %>
+          </div>
+
+        <% end %>
+        <div class="col-lg-3">
+          <%#= link_to 'Back', new_number_validation_path, class: "w3-btn w3-text-white btn-block", style: "background-color: #f95f35 !important;" %>
+        </div>
+
+
+      </div>
+    </div>
+
+  </div><!-- end here -->
+  <div class="slim-footer">
+    <div class="container">
+      <p>Copyright 2019 &copy; All Rights Reserved. appsNmobile Solutions</p>
+    </div><!-- container -->
+  </div><!-- slim-footer -->
+</div>

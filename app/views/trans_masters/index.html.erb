@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Trans Masters</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Main trans</th>
+      <th>Final status</th>
+      <th>Is reversal</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @trans_masters.each do |trans_master| %>
+      <tr>
+        <td><%= trans_master.main_trans_id %></td>
+        <td><%= trans_master.final_status %></td>
+        <td><%= trans_master.is_reversal %></td>
+        <td><%= link_to 'Show', trans_master %></td>
+        <td><%= link_to 'Edit', edit_trans_master_path(trans_master) %></td>
+        <td><%= link_to 'Destroy', trans_master, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Trans master', new_trans_master_path %>

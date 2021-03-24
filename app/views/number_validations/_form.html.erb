@@ -1,0 +1,19 @@
+<%= simple_form_for(@number_validation) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :mobile_number %>
+    <%= f.input :network %>
+    <%= f.input :group_id %>
+    <%= f.input :status %>
+    <%= f.input :changed_status %>
+    <%= f.input :user_id %>
+    <%= f.input :recipient_name %>
+    <%= f.input :client_code %>
+    <%= f.input :csv_upload_id %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

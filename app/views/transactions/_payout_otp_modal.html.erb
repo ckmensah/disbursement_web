@@ -1,0 +1,42 @@
+<div id="id01" class="w3-modal w3-card-4" style="display: none">
+  <div class="w3-modal-content  w3-animate-top w3-card-4 col-md-4 col-md-offset-4">
+
+    <div class="w3-center"><br>
+      <legend class="w3-container">Presidential Search</legend>
+      <span onclick="document.getElementById('id01').style.display='none';" class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal">&times;</span>
+    </div>
+    <br>
+
+
+    <div class="w3-container" style="display: block">
+
+
+    </div>
+    <br>
+    <br>
+  </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        console.log("Okay");
+        $("#candidate").select2();
+        $("#region").select2();
+        $("#pStation").select2();
+        $("#const").select2();
+        width: "resolve";
+    });
+
+</script>
+
+
+<style type="text/css">
+  .select2{
+    width: 100%!important;
+    /*margin-top: -8% !important;*/
+  }
+  .selection{
+    width: 70% !important;
+    /*margin-top: -8% !important;*/
+  }
+</style>

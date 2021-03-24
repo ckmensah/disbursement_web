@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @approver.user_id %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @approver.category_id %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @approver.status %>
+</p>
+
+<p>
+  <strong>Changed status:</strong>
+  <%= @approver.changed_status %>
+</p>
+
+<p>
+  <strong>Approver code:</strong>
+  <%= @approver.approver_code %>
+</p>
+
+<p>
+  <strong>User approver:</strong>
+  <%= @approver.user_approver_id %>
+</p>
+
+<%= link_to 'Edit', edit_approver_path(@approver) %> |
+<%= link_to 'Back', approvers_path %>

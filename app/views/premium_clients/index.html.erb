@@ -1,0 +1,60 @@
+
+<div class="center"  >
+  <center>
+
+    <br/>
+    <div class="row">
+      <div class="col-md-9  col-md-offset-1">
+
+
+        <fieldset>
+          <legend>Clients</legend>
+
+          <table class="table table-striped table-hover table-bordered">
+
+            <tr id="head">
+
+              <th>Company Name</th>
+              <th>Email</th>
+              <th>Client Code</th>
+              <th>Contact</th>
+              <th>Date/Time</th>
+              <!--<th>Settlement Account</th>-->
+              <!--<th>Collection Account</th>-->
+
+
+              <th colspan="3"></th>
+            </tr>
+            <% @premium_clients.each do |premium_client| %>
+
+                <tr>
+                  <td><%= premium_client.company_name %></td>
+                  <td><%= premium_client.email %></td>
+                  <td><%= premium_client.client_code %></td>
+                  <td><%= premium_client.contact_number %></td>
+                  <td><%= premium_client.created_at.strftime("%F %R")%></td>
+                  <!--<td><%#= premium_client.collection_account %></td>-->
+                  <!--<td><%#= premium_client.subscriber_code %></td>-->
+                  <!--<td><%#= premium_client.changed_status %></td>-->
+                  <!--<td><%#= premium_client.status %></td>-->
+                  <!--<td><%#= premium_client.user_id %></td>-->
+                  <td><%= link_to 'Details', premium_client , class:'"btn btn-success btn-sm btn3d"'%></td>
+                  <td><%=link_to 'Edit', edit_premium_client_path(premium_client),  class:'"btn btn-primary btn-sm btn3d"'%></td>
+                  <% if current_user.s_user? || current_user.ultra? %>
+                  <td><%= link_to 'Delete', premium_client, method: :delete, data: { confirm: 'Are you sure?' },  class:'"btn btn-danger btn-sm btn3d"' %></td>
+                  <% end %>
+
+
+                </tr>
+            <% end %>
+          </table>
+          <%= link_to 'New', new_premium_client_path, class:'btn btn-primary pull-left'%>
+
+          <%#= link_to 'New', new_premium_client_path, class:'btn btn-primary pull-left'%>
+
+        </fieldset>
+        <%#= will_paginate @premium_clients %>
+      </div>
+    </div>
+  </center>
+</div>

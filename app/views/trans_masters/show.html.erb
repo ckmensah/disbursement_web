@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Main trans:</strong>
+  <%= @trans_master.main_trans_id %>
+</p>
+
+<p>
+  <strong>Final status:</strong>
+  <%= @trans_master.final_status %>
+</p>
+
+<p>
+  <strong>Is reversal:</strong>
+  <%= @trans_master.is_reversal %>
+</p>
+
+<%= link_to 'Edit', edit_trans_master_path(@trans_master) %> |
+<%= link_to 'Back', trans_masters_path %>

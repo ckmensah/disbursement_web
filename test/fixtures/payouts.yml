@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  approval_status: false
+  approver_cat_id: MyString
+  comment: MyText
+  processed: false
+  group_id: 1
+  needs_approval: false
+  user_id: 1
+
+two:
+  title: MyString
+  approval_status: false
+  approver_cat_id: MyString
+  comment: MyText
+  processed: false
+  group_id: 1
+  needs_approval: false
+  user_id: 1

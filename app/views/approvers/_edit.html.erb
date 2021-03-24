@@ -1,0 +1,24 @@
+<center>
+
+  <br/>
+  <div class="row">
+    <div class="col-md-6  col-md-offset-2">
+
+    <legend>Update Approver</legend>
+      <%= simple_form_for(@approver, remote: true) do |f| %>
+        <%= f.error_notification %>
+
+        <div class="form-inputs">
+          <%= f.input :user_approver_id, collection: @approvers, label_method: lambda {|a| "#{a.other_names} #{a.lastname}"}, required: true, autofocus: true, input_html:{class:"form-control",style:"width:60%;"} %>
+          <%= f.input :category_id, collection: @categories, label_method: :category_name, value_method: :id, required: true, autofocus: true, input_html:{class:"form-control",style:"width:60%;"} %>
+          <%#= f.input :level, required: true, autofocus: true, input_html:{class:"form-control",style:"width:60%;"} %>
+        </div>
+
+        <div class="form-actions">
+          <%= f.button :submit, "Submit",class: "btn btn-primary", style: "width:auto" %>
+          <%= link_to 'Back', approvers_categories_path,class: "btn btn-danger", style: "width:auto"%>
+        </div>
+      <% end %>
+      </div>
+    </div>
+  </center>

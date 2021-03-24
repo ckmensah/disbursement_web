@@ -1,0 +1,110 @@
+<div class="center">
+  <center>
+
+    <br/>
+    <div class="row">
+      <div class="col-mid-9 col-md-offset-1 col-lg-10">
+        <fieldset>
+          <div class="col-md-8 col-md-offset-2">
+
+            <legend>Transaction Details</legend>
+            <table class="table table-striped table-hover table-bordered">
+
+
+              <tr>
+                <td id="details-table">Name</td>
+                <td><%= "#{@transaction.recipient.recipient_name}" %></td>
+              </tr>
+
+              <tr>
+                <td id="details-table">Telco ID</td>
+                <td><%= @transaction.callback_resp.trnx_id  if @transaction.callback_resp %></td>
+              </tr>
+
+              <tr>
+                <td id="details-table">Transaction ID</td>
+                <td><%= @transaction.transaction_ref_id %></td>
+              </tr>
+
+
+
+              <tr>
+                <td id="details-table">Phone Number</td>
+                <td><%= @transaction.mobile_number %></td>
+              </tr>
+
+              <tr>
+                <td id="details-table">Amount (GHS)</td>
+                <td><%= @transaction.amount %></td>
+
+              </tr>
+
+              <tr>
+                <td id="details-table">Type</td>
+                <td><%= @transaction.trans_type %></td>
+              </tr>
+
+              <tr>
+                <td id="details-table">Network</td>
+                <td><%= @transaction.network %></td>
+              </tr>
+
+              <tr>
+                <td id="details-table">Status</td>
+                <td>
+                  <% if @transaction.err_code == "000" %>
+                    Success
+                  <% elsif @transaction.err_code == "001" %>
+                    Failed
+                  <% else %>
+                    <%= "Pending" %>
+
+                  <% end %>
+
+                </td>
+              </tr>
+
+
+              <tr>
+                <td id="details-table">Network Response</td>
+                <td>
+                  <% if @transaction.err_code == "000" %>
+                    <%= "#{@transaction.nw_resp}" %>
+                  <% elsif @transaction.err_code == "001" %>
+                    <%= "#{@transaction.nw_resp}" %>
+                  <% else %>
+                    <%= "Pending" %>
+
+                  <% end %>
+
+                </td>
+              </tr>
+
+              <tr>
+                <td id="details-table">Reference</td>
+                <td><%= @transaction.reference %></td>
+              </tr>
+
+              <tr>
+                <td id="details-table">Transaction Date</td>
+                <td><%= @transaction.created_at.strftime("%F %R") %></td>
+              </tr>
+
+              <!--                <tr>-->
+              <!--                  <td id="details-table">Created by:</td>-->
+              <!--                  <td><%#= "#{@transaction.user.other_names} #{@transaction.user.lastname}" if @transaction.user  %>-->
+              <!--                </td>-->
+              <!--                </tr>-->
+
+
+            </table>
+
+            <%= link_to 'Back', session.delete(:return_to), class: 'btn btn-danger' %>
+          </div>
+
+
+        </fieldset>
+      </div>
+    </div>
+  </center>
+</div>

@@ -1,0 +1,96 @@
+<div class="w3-container">
+  <div class="slim-mainpanel w3-center">
+    <div class="container">
+      <div class="slim-pageheader">
+        <ol class="breadcrumb slim-breadcrumb">
+          <li class="breadcrumb-item" ><a href="/" style = "color: #f95f35 !important;">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">New Payout</li>
+        </ol>
+        <h6 class="slim-pagetitle">New Payout</h6>
+      </div><!-- slim-pageheader -->
+
+      <!-- begin page -->
+
+      <div class="section-wrapper mg-t-20 w3-hide">
+        <%= simple_form_for(@transaction, :remote => true, html: {autocomplete: 'off'}) do |f| %>
+          <%= f.error_notification %>
+          <div class="form-layout">
+            <div class="row">
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <!--                  <input class="form-control" type="text" name="rname" placeholder="Recipient name">-->
+                  <%= f.input :rec_name, class: "form-control", label: false, as: :text, input_html: {:style => 'height: 35px!important;'}, placeholder: "Recipient name" %>
+                </div>
+              </div><!-- col-4 -->
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <!--                  <input class="form-control" type="text" name="mobileNumber" placeholder="Mobile Number">-->
+                  <%= f.input :mobile_num, class: "form-control", label: false, as: :numeric, input_html: {min: "0"}, placeholder: "Mobile Number" %>
+                </div>
+              </div><!-- col-4 -->
+              <div class="col-lg-2">
+                <div class="form-group">
+                  <%= f.input :netwk, label: false, collection: ["AIR", "MTN", "VOD", "TIG"].insert(0, '--network--'), selected: 0, placeholder: "Network", required: true, input_html: {class: "form-control", style: "padding-left: 2px; padding-right: 2px;padding-bottom: 2px;"} %>
+
+                </div>
+              </div><!-- col-4 -->
+              <div class="col-lg-2">
+                <div class="form-group">
+                  <!--                  <input class="form-control" type="text" name="amount" placeholder="Amount">-->
+                  <%= f.input :amt, label: false, placeholder: "Amount", as: :numeric, input_html: {class: "form-control", min: "0"} %>
+                </div>
+              </div><!-- col-4 -->
+              <%= f.input :user_id, as: :hidden, input_html: {value: current_user.id} %>
+              <%= f.input :client_code, as: :hidden, input_html: {value: current_user.client_code} %>
+              <%= f.input :disburse_status, as: :hidden, input_html: {value: 0} %>
+
+
+              <div class="col-lg-2">
+                <!--                <button class="btn btn-primary btn-block">Add</button>-->
+                <%= f.button :submit, "Add", class: "btn btn-primary btn-block", style: "width:auto", :data => {confirm: "Do you wish to proceed?", :disable_with => "Please wait..."} %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div><!-- container -->
+
+      <div id="bulk_recipients">
+        <%= render 'transactions/bulk_recipients' %>
+      </div>
+
+      <div id="recipients">
+        <%= render 'transactions/index' %>
+      </div>
+
+
+      <div class="row mt-3 w3-center">
+        <% if @recipients == [] %>
+        <% else %>
+          <div class="col-lg-3">
+            <!--            <button class="btn btn-success btn-block">Payout</button>-->
+            <%#= link_to 'Payout', disburse_money_path(client_code: current_user.client_code, disburse_type: 'CR'), data: {confirm: "You are about to disburse funds, do you wish to proceed?", disable_with: "Please wait..."}, class: "btn btn-success btn-block" %>
+            <% if @recipients_total_amount.to_f < @get_current_balance['payout_bal'].to_f %>
+              <%= link_to 'Payout', disburse_money_path(client_code: current_user.client_code, disburse_type: 'CR'), data: {confirm: "You are about to Pay Out to\nNumber of Recipients: #{@recipients_count}\nTotal Amount: GHS #{@recipients_total_amount.to_f}\nWallet Balance: GHs #{@get_current_balance['payout_bal']}\nDo you wish to proceed?", disable_with: "Please wait..."}, class: "w3-btn w3-text-white btn-block", style: "background-color: #1c9a06 !important;" %>
+              <%#= link_to 'Payout', '/', data: {confirm: "You are about to Pay Out to\nNumber of Recipients: #{@recipients_count}\nTotal Amount: GHS #{@recipients_total_amount.to_f}\nWallet Balance: GHs #{@get_current_balance['payout_bal']}\nDo you wish to proceed?", disable_with: "Please wait..."}, class: "w3-btn w3-text-white btn-block", style: "background-color: #1c9a06 !important;" %>
+            <% else %>
+              <%= link_to 'Payout', '#', :onclick => "alert('Insufficent Balance. Please fund your wallet and try again!')", class: "w3-btn w3-text-white btn-block", style: "background-color: #1c9a06 !important;" %>
+            <% end %>
+          </div>
+
+        <% end %>
+        <div class="col-lg-3">
+          <!--          <button class="btn btn-primary btn-block">Back</button>-->
+          <%= link_to 'Back', transactions_path, class: "w3-btn w3-text-white btn-block", style: "background-color: #f95f35 !important;" %>
+        </div>
+
+
+      </div>
+    </div>
+
+  </div><!-- end here -->
+  <div class="slim-footer">
+    <div class="container">
+      <p>Copyright 2019 &copy; All Rights Reserved. appsNmobile Solutions</p>
+    </div><!-- container -->
+  </div><!-- slim-footer -->
+</div>

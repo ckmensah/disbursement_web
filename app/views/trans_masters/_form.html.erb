@@ -1,0 +1,13 @@
+<%= simple_form_for(@trans_master) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :main_trans_id %>
+    <%= f.input :final_status %>
+    <%= f.input :is_reversal %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

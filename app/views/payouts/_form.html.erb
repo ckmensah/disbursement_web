@@ -1,0 +1,61 @@
+<%= simple_form_for(@payout) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-group">
+    <%= f.input :title, required: true, autofocus: true, input_html: {class: "form-control", style: "width:50%;"} %>
+    <hr/>
+
+
+    <% if current_user.is_client && @user_app.needs_approval %>
+      <%= f.label "Needs Approval", class: "col-md-4 control-label hidden" %>
+      <%= f.input :needs_approval, label: false, as: :hidden, :input_html => {:checked => @user_app.needs_approval, :value => @user_app.needs_approval, style: "width:50%;margin-left: -25%;"} %>
+      <%= f.input :approver_cat_id, required: true, label: "Approval Category", collection: @approver_categories, label_method: :category_name, value_method: :id, autofocus: true, input_html: {id: "approvers_category", class: "form-control", style: "width:50%;"} %>
+    <% elsif current_user.is_client && !@user_app.needs_approval %>
+      <%= f.label "Needs Approval", class: "col-md-4 control-label hidden" %>
+      <%= f.input :needs_approval, label: false, as: :hidden, :input_html => {:checked => @user_app.needs_approval, :value => @user_app.needs_approval, style: "width:50%;margin-left: -25%;"} %>
+      <%= f.input :approver_cat_id, required: false, as: :hidden, label: "Approval Category", collection: @approver_categories, label_method: :category_name, value_method: :id, autofocus: true, input_html: {id: "approvers_category", value: nil, class: "form-control", style: "width:50%;"} %>
+    <% else %>
+      <%= f.label "Needs Approval", class: "col-md-4 control-label hidden" %>
+      <%= f.input :needs_approval, label: false, as: :hidden, :input_html => {:checked => false, :value => false, style: "width:50%;margin-left: -25%;"} %>
+      <%= f.input :approver_cat_id, required: true, label: "Approval Category", collection: @approver_categories, label_method: :category_name, value_method: :id, autofocus: true, input_html: {id: "approvers_category", class: "form-control", style: "width:50%;"} %>
+    <% end %>
+
+
+    <div id="approver_levels">
+
+    </div>
+
+    <%= f.input :comment, autofocus: true, input_html: {class: "form-control", style: "width:50%;"} %>
+  </div>
+  <%= f.input :group_id, label: "Recipient Group", collection: @recipient_group, label_method: :group_desc, value_method: :id, required: true, autofocus: true, input_html: {class: "form-control", style: "width:50%;"} %>
+
+  <%= f.input :user_id, as: :hidden, input_html: {value: current_user.id} %>
+
+  <hr/>
+  <div class="form-actions">
+    <%= f.button :submit, "Submit", class: "btn btn-primary", style: "width:auto" %>
+    <%= link_to 'Back', payouts_path, class: "btn btn-danger", style: "width:auto" %>
+  </div>
+<% end %>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //empty it
+//		$('#id_cities').empty();
+        //before ajax call
+
+        $('#approvers_category').change(function () {
+            $.ajax({
+                url: '<%= set_approver_levels_path %>',
+                data: {
+                    category_id: $('#approvers_category').val()
+                },
+                dataType: "script"
+            });
+        });
+    });
+
+</script>

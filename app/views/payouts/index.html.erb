@@ -1,0 +1,203 @@
+<div class="center">
+  <center>
+
+    <br/>
+
+    <div class="row">
+      <br>
+      <br>
+
+      <div class="col-md-8  col-md-offset-1">
+
+
+        <fieldset>
+          <legend>Payouts</legend>
+
+          <table class="table table-striped table-hover table-bordered">
+
+            <tr id="head">
+
+              <th>Title</th>
+              <!--<th>Needs Approval</th>-->
+              <% if @user_app == true %>
+                <th>Approver Category</th>
+              <% else %>
+              <% end %>
+
+              <th>Recipient Group</th>
+              <th>Comment</th>
+              <th>Processed</th>
+              <th>Date</th>
+
+              <th colspan="4"></th>
+            </tr>
+            <% @payouts.each do |payout| %>
+
+              <tr>
+                <td><%= payout.title %></td>
+                <!--<td><%#= payout.needs_approval ? 'Yes' : 'No' %></td>-->
+                <% if @user_app == true %>
+                  <td><%= payout.app_cat.category_name if payout.app_cat %></td>
+                <% else %>
+                <% end %>
+                <td><%= payout.recipient_group.group_desc if payout.recipient_group %></td>
+                <td><%= payout.comment %></td>
+                <td><%= payout.processed ? 'Yes' : 'No' %></td>
+                <td><%= payout.created_at.strftime("%F %R") %></td>
+
+                <!--<td><%#= payout.user_id %></td>-->
+                <td><%= link_to 'Show', payout, class: '"btn btn-success btn-sm btn3d"' %></td>
+
+                <% unless current_user.approver? %>
+
+                  <% if !payout.processed %>
+                    <td>
+                      <%# html_class = payout.processed ? '"btn btn-primary btn-sm btn3d"' : "btn btn-primary btn-sm disabled" %>
+                      <% html_class = payout.processed ? '"btn btn-primary btn-sm disabled"' :'"btn btn-primary btn-sm btn3d"'  %>
+                      <%= link_to 'Edit', edit_payout_path(payout), class: html_class %>
+                    </td>
+                  <% end %>
+                <% end %>
+
+                <% if payout.approval_status %>
+                  <td>
+                    <% if payout.processed || payout.user_id != current_user.id %>
+                      <%= link_to 'Payout', '#', class: "btn btn-info btn-xs disabled" %>
+                    <% else %>
+                      <%= link_to 'Payout', disburse_path(payout_id: payout.id, group_id: payout.group_id, client_code: payout.recipient_group.client_code, disburse_type: 'CR'), confirm: {data: "You are about to payout to #{payout.recipient_group.group_desc}, Continue?"}, class: '"btn btn-info btn-sm btn3d"' %>
+                    <% end %>
+                  </td>
+
+                  <!--<td>-->
+                  <!--<%# if payout.processed || payout.user_id != current_user.id%>-->
+                  <!--<%#=link_to 'TopUp', '#',  class:"btn btn-primary btn-xs disabled"%>-->
+                  <!--<%# else %>-->
+                  <!--<%#=link_to 'TopUp', disburse_path(payout_id: payout.id,group_id: payout.group_id, client_code: payout.recipient_group.client_code, disburse_type: 'TP' ), confirm: {data: "You are about to payout to #{payout.recipient_group.group_desc}, Continue?"},  class:'"btn btn-primary btn-sm btn3d"'%>-->
+                  <!--<%# end %>-->
+                  <!--</td>-->
+
+                <% elsif not payout.needs_approval %>
+                  <%#if payout.recipient_group and payout.recipient_group.client.premium_service.pay_out_status %>
+                  <td>
+                    <% if payout.processed or payout.user_id != current_user.id %>
+                      <%= link_to 'Payout', '#', class: "btn btn-info btn-xs disabled" %>
+                    <% else %>
+                      <%= link_to 'Payout', disburse_path(payout_id: payout.id, group_id: payout.group_id, client_code: payout.recipient_group.client_code, disburse_type: 'CR'), data: {confirm: "You are about to payout to #{payout.recipient_group.group_desc}, Continue?"}, class: '"btn btn-info btn-sm btn3d"' %>
+                    <% end %>
+                  </td>
+                  <%# end %>
+                  <%#if payout.recipient_group and payout.recipient_group.client.premium_service.topup_status %>
+                  <%#= payout.recipient_group.client.premium_service.inspect %>
+                  <!--<td>-->
+                  <!--<%# if payout.processed or payout.user_id != current_user.id %>-->
+                  <!--<%#=link_to 'TopUp', '#',  class:"btn btn-primary btn-xs disabled"%>-->
+                  <!--<%# else %>-->
+                  <!--<%#=link_to 'TopUp', disburse_path(payout_id: payout.id,group_id: payout.group_id, client_code: payout.recipient_group.client_code, disburse_type: 'TP' ), confirm: {data: "You are about to payout to #{payout.recipient_group.group_desc}, Continue?"},  class:'"btn btn-primary btn-sm btn3d"'%>-->
+                  <!--<%# end %>-->
+                  <!--</td>-->
+                  <%# end %>
+                <% else %>
+
+                  <% if payout.see_approve_btn(payout.id, current_user.id) %>
+
+                    <% if current_user.approver? %>
+
+                      <% if not payout.disapprove %>
+                        <td>
+                          <%= link_to 'Approve', approve_payout_path(payout.id), data: {confirm: 'Are you sure you want to approve?'}, class: '"btn btn-warning btn-sm btn3d"' %>
+                        </td>
+                      <% else %>
+                        <%#= link_to 'Disapprove', '#', class: "btn btn-warning btn-xs disabled" %>
+                      <% end %>
+                    <% else %>
+
+                    <% end %>
+                  <% else %>
+                    <%#= link_to 'Approve', '#', class: "btn btn-warning btn-xs disabled" %>
+
+                  <% end %>
+
+
+                  <% if payout.see_approve_btn(payout.id, current_user.id) %>
+
+                    <% if current_user.approver? %>
+                      <td>
+                        <% if not payout.disapprove %>
+                          <%#=link_to 'Disapprove', '#',  class:'"btn btn-danger btn-sm btn3d"', id: 'disapprove'%>
+                          <button onclick="document.getElementById('dis_form').style.display='block'" class="btn btn-danger btn-sm btn3d">Disapprove</button>
+                          <!-- ################################################################################## -->
+                          <div class="">
+
+                            <div class="w3-container w3-card w3-center w3-animate-opacity">
+
+                              <div id="dis_form" class="w3-modal w3-center" style="display: none">
+
+                                <div class="w3-modal-content w3-border-teal w3-round-small w3-center" style="width: 40%">
+                                  <!--<div class="col-md-8 col-md-2" >-->
+                                  <span onclick="document.getElementById('dis_form').style.display='none'"
+                                        class="w3-button w3-display-topright">&times;</span>
+                                  <br>
+                                  <legend>Disapproval form</legend>
+                                  <div class="w3-container">
+
+                                    <%= form_tag approve_payout_path(payout.id), method: :get, input_html: {display: "block"} do %>
+                                      <div style="display: block">
+                                        <div class="row">
+
+                                          <div class="col-md-12">
+                                            <textarea id="search-field" class="form-control" placeholder="<%= "I disapprove payout #{payout.title} because..." %>" name="dis_reason"> <%= "I disapprove payout #{payout.title} because..." %> </textarea>
+                                          </div>
+                                          <div class="col-md-12">
+                                            <input id="search-field" class="form-control hidden" placeholder="Transaction ID" name="disapprove" value="disapprove"/>
+                                          </div>
+
+                                        </div>
+
+                                        <%#= input :name_value, label:false, input_html:{  display:"inline",class:"form-control",placeholder:"contact's name",name:"name_value"} %>
+                                        <input id="search-btn" type="submit" value="Disapprove" class="btn btn-primary search-btn">
+
+                                      </div>
+
+                                    <% end %>
+                        <% elsif payout.disapprove %>
+                          <%= link_to 'Disapproved', '#', class: "btn btn-danger btn-xs disabled" %>
+
+                        <% else %>
+
+                        <% end %>
+                        </div>
+                        <!--</div>-->
+                        </div>
+                        <br>
+                        </div>
+                        </div>
+                        </div>
+                      </td>
+                      <!-- ################################################################################## -->
+
+                    <% else %>
+                      <%#= link_to 'Disapprove', '#', class: "btn btn-danger btn-xs disabled" %>
+
+                    <% end %>
+                  <% end %>
+
+                <% end %>
+
+
+              </tr>
+            <% end %>
+          </table>
+          <div class="digg_pagination">
+            <%= will_paginate @transactions %>
+          </div>
+          <% unless current_user.approver? %>
+            <%= link_to 'New', new_payout_path, class: 'btn btn-primary pull-left' %>
+          <% end %>
+          <%#= link_to 'New', new_payout_path, class:'btn btn-primary pull-left'%>
+
+        </fieldset>
+        <%#= will_paginate @payouts %>
+      </div>
+    </div>
+  </center>
+</div>

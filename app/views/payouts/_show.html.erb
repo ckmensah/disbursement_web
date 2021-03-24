@@ -1,0 +1,87 @@
+<div class="center">
+  <center>
+
+    <br/>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-2">
+        <fieldset>
+          <legend>Details</legend>
+          <table class="table table-striped table-hover table-bordered">
+
+            <tr>
+              <td id="details-table">Title</td>
+              <td><%= @payout.title %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Other Names</td>
+              <td><%= @payout.approval_status ? 'Yes' : 'No' %></td>
+            </tr>
+            <% if @user_app.needs_approval %>
+              <tr>
+                <td id="details-table">Category</td>
+                <td><%= @payout.app_cat.category_name if @payout.app_cat %></td>
+
+              </tr>
+            <% elsif !@user_app.needs_approval %>
+
+            <% end %>
+
+
+            <tr>
+              <td id="details-table">Comment</td>
+              <td><%= @payout.comment %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Disapproval Reason</td>
+              <td><%= @payout.disapproval_reason %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Processed</td>
+              <td><%= @payout.processed ? 'Yes' : 'No' %></td>
+            </tr>
+
+          </table>
+
+          <% if @user_app.needs_approval == true %>
+            <div>
+              <legend>Approvers</legend>
+
+              <table class="table table-striped table-hover table-bordered">
+
+                <tr id="head">
+                  <th>Approver</th>
+                  <th>Notified</th>
+                  <th>Approved</th>
+
+                  <th>Level</th>
+
+                </tr>
+                <% @approvers.each do |approver| %>
+                  <tr>
+                    <td><%= "#{approver.approver.user.other_names} #{approver.approver.user.lastname}" if approver.approver.user %></td>
+                    <td><%= approver.notified ? 'Yes' : 'No' %></td>
+                    <td><%= approver.approved ? 'Yes' : 'No' %></td>
+                    <!--<td><%#= approver. %></td>-->
+                    <td><%= approver.level %></td>
+                  </tr>
+                <% end %>
+              </table>
+            </div>
+          <% else %>
+          <% end %>
+          <div>
+            <%= render 'recipients/index' %>
+          </div>
+
+
+          <%#= link_to 'Edit', edit_user_path(@payout), class:'btn btn-primary' %>
+          <%= link_to 'Back', payout_index_path, class: 'btn btn-danger', :remote => true %>
+
+        </fieldset>
+      </div>
+    </div>
+  </center>
+</div>

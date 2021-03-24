@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Old trnx:</strong>
+  <%= @transaction_reprocess.old_trnx_id %>
+</p>
+
+<p>
+  <strong>New trnx:</strong>
+  <%= @transaction_reprocess.new_trnx_id %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= @transaction_reprocess.amount %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @transaction_reprocess.status %>
+</p>
+
+<p>
+  <strong>Auto:</strong>
+  <%= @transaction_reprocess.auto %>
+</p>
+
+<p>
+  <strong>Err code:</strong>
+  <%= @transaction_reprocess.err_code %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @transaction_reprocess.user_id %>
+</p>
+
+<p>
+  <strong>Nw resp:</strong>
+  <%= @transaction_reprocess.nw_resp %>
+</p>
+
+<%= link_to 'Edit', edit_transaction_reprocess_path(@transaction_reprocess) %> |
+<%= link_to 'Back', transaction_reprocesses_path %>

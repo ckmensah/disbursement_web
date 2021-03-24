@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  msg_id: MyString
+  phone_number: MyString
+  msg: MyText
+  resp_code: MyString
+  resp_desc: MyString
+  status: false
+
+two:
+  msg_id: MyString
+  phone_number: MyString
+  msg: MyText
+  resp_code: MyString
+  resp_desc: MyString
+  status: false

@@ -1,0 +1,19 @@
+
+<%= simple_form_for(@recipient, :url => recipients_import_path, :method => :post, html: {:multipart => true }) do |f| %>
+
+    <%= f.error_notification %>
+
+    <div class="row">
+      <div class="bg-info">
+        Click <%= link_to 'Here', sample_csv_path %> to download a sample csv file. All fields are required.
+      </div>
+        <div class="col-md-4">
+          <%= file_field_tag :file, accept: '.csv', require: true, class:"form-control", label: false, boolean_style: :inline, input_html: {class: "form-control",height: "auto"} %>
+        </div>
+
+        <div class="col-md-2 form-actions">
+          <%= f.submit "Upload", class: "btn btn-success" %>
+        </div>
+    </div>
+<% end %>
+

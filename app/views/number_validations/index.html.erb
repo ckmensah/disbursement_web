@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Number Validations</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Mobile number</th>
+      <th>Network</th>
+      <th>Group</th>
+      <th>Status</th>
+      <th>Changed status</th>
+      <th>User</th>
+      <th>Recipient name</th>
+      <th>Client code</th>
+      <th>Csv upload</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @number_validations.each do |number_validation| %>
+      <tr>
+        <td><%= number_validation.mobile_number %></td>
+        <td><%= number_validation.network %></td>
+        <td><%= number_validation.group_id %></td>
+        <td><%= number_validation.status %></td>
+        <td><%= number_validation.changed_status %></td>
+        <td><%= number_validation.user_id %></td>
+        <td><%= number_validation.recipient_name %></td>
+        <td><%= number_validation.client_code %></td>
+        <td><%= number_validation.csv_upload_id %></td>
+        <td><%= link_to 'Show', number_validation %></td>
+        <td><%= link_to 'Edit', edit_number_validation_path(number_validation) %></td>
+        <td><%= link_to 'Destroy', number_validation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Number validation', new_number_validation_path %>

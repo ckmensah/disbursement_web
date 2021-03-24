@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Group desc:</strong>
+  <%= @recipient_group.group_desc %>
+</p>
+
+<p>
+  <strong>Client code:</strong>
+  <%= @recipient_group.client_code %>
+</p>
+
+<p>
+  <strong>Approver code:</strong>
+  <%= @recipient_group.approver_code %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @recipient_group.status %>
+</p>
+
+<%= link_to 'Edit', edit_recipient_group_path(@recipient_group) %> |
+<%= link_to 'Back', recipient_groups_path %>

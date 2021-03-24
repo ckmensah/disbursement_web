@@ -1,0 +1,19 @@
+<div class="col-md-12" style="background: #ECEFF1">
+<div class="col-md-8 col-md-offset-1 col-lg-10">
+  <br>
+  <br>
+  <br>
+  <br>
+<% if params[:after_upload] == "yes" %>
+  <div id="transaction" class="center">
+    <%= render 'transactions/new' %>
+  </div>
+
+<% else %>
+<!--<h1>New Transaction</h1>-->
+
+<%#= render 'form' %>
+<%#= link_to 'Back', transactions_path %>
+<% end %>
+</div>
+</div>

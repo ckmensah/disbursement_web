@@ -1,0 +1,48 @@
+<div class="center"  >
+  <center>
+
+    <br/>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <!--<div class="jumbotron">-->
+        <fieldset style="width: 85%">
+
+          <legend>Edit Profile</legend>
+
+          <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+              <%= f.error_notification %>
+
+              <div class="form-inputs">
+                <%= f.input :username, required: true, autofocus: true,input_html:{class:"form-control",style:"width:50%;"} %>
+                <%= f.input :password, autocomplete: "off",input_html:{class:"form-control",style:"width:50%;"}, required: false %>
+                <%= f.input :password_confirmation, required: false, input_html:{class:"form-control",style:"width:50%;"} %>
+
+                <%= f.input :email, required: true, autofocus: true, input_html:{class:"form-control",style:"width:50%;"} %>
+                <%= f.input :lastname, required: true, autofocus: true,input_html:{class:"form-control",style:"width:50%;"} %>
+                <%= f.input :other_names, required: true, autofocus: true,input_html:{class:"form-control",style:"width:50%;"} %>
+                <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                    <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+                <% end %>
+
+                <%= f.input :current_password, hint: "we need your current password to confirm your changes", required: true,input_html:{class:"form-control",style:"width:50%;"} %>
+              </div>
+
+              <div class="form-actions">
+
+                <%= f.submit "Update" ,class: "btn btn-primary", style: "width:auto"%>
+                <%= link_to "Back", root_path, class: "btn btn-danger", style: "width:auto" %>
+              </div>
+          <% end %>
+
+          <!--<h3>Cancel my account</h3>-->
+
+          <!--<p>Unhappy? <%#= link_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>-->
+          <br>
+
+
+        </fieldset>
+      </div>
+    </div>
+    <!--</div>-->
+  </center>
+</div>

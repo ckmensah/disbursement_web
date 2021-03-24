@@ -1,0 +1,57 @@
+
+<div class="center" >
+  <center>
+
+    <br/>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-2">
+        <fieldset>
+          <legend>Details</legend>
+          <table class="table table-striped table-hover table-bordered">
+
+            <tr>
+              <td id="details-table">Username</td>
+              <td><%= @user.username %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Other Names</td>
+              <td><%= @user.other_names %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Last Name</td>
+              <td><%= @user.lastname %></td>
+
+            </tr>
+
+            <tr>
+              <td id="details-table">Email</td>
+              <td><%= @user.email %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Phone Number</td>
+              <td><%= @user.mobile_number %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Role</td>
+              <td><%= @user.role.role if @user.role %></td>
+            </tr>
+
+            <tr>
+              <td id="details-table">Company</td>
+              <td><%= @user.client.company_name if @user.is_client %></td>
+            </tr>
+
+          </table>
+
+          <%#= link_to 'Edit', edit_user_path(@user), class:'btn btn-primary' %>
+          <%= link_to 'Back', users_path, class:'btn btn-danger' %>
+
+        </fieldset>
+      </div>
+    </div>
+  </center>
+</div>

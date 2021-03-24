@@ -1,0 +1,736 @@
+<div>
+  <div class="slim-mainpanel">
+    <div class="container">
+      <div class="slim-pageheader">
+        <ol class="breadcrumb slim-breadcrumb">
+          <li class="breadcrumb-item"><a href="#" style = "color: #f95f35 !important;">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Transactions</li>
+        </ol>
+        <h6 class="slim-pagetitle">Payout History</h6>
+      </div><!-- slim-pageheader -->
+      <div class="row row-xs">
+        <div class="w3-left">
+          Display::
+          <%= select_tag :per_page, options_for_select(["", 30, 40, 50, 70, 100, "All"], params[:per_page].to_i),:onchange => "if(this.value){window.location.href=window.location.href+'?yes&per_page='+this.value;}", style: "width: 50px" %>
+        </div>
+
+
+      </div>
+      <div>
+        Download::
+        <% if params[:filter_main].present? %>
+          <%= link_to "CSV", transactions_path(format: "csv", "per_page" => @per_page, "filter_main[name]" => params[:filter_main]["name"], "filter_main[trans_id]" => params[:filter_main]["trans_id"], "filter_main[phone_number]" => params[:filter_main]["phone_number"], "filter_main[client_code]" => params[:filter_main]["client_code"], "filter_main[trans_type]" => params[:filter_main]["trans_type"], "filter_main[network]" => params[:filter_main]["network"], "filter_main[status]" => params[:filter_main]["status"], "filter_main[start_date]" => params[:filter_main]["start_date"], "filter_main[end_date]" => params[:filter_main]["end_date"]), class: "w3-button w3-purple w3-hover w3-tiny w3-round-xxlarge" %>
+        <% else %>
+          <%= link_to "CSV", transactions_path(format: "csv", "per_page" => @per_page), class: "w3-button w3-purple w3-hover w3-tiny w3-round-xxlarge" %>
+        <% end %>
+        <p style="font-size: 15px">Click <%= link_to 'Here', sample_csv_path %> to download a sample csv file. Kindly
+          make sure your csv file to upload follows the same format.</p>
+      </div>
+      <!-- begin page -->
+      <div class="row row-xs">
+        <div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
+          <div class="card card-status">
+            <div class="media">
+              <div class="media-body">
+                <%= link_to '<i class="fa fa-plus mg-r-5"></i> New Payout'.html_safe, new_transaction_path, class: "w3-btn w3-text-white btn-block",style: "background-color: #f95f35 !important;", data: {disable_with: 'Please wait'}, :remote => true %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-sm-6 col-lg-3">
+          <div class="card card-status">
+            <div class="media">
+              <i class="icon ion-ios-briefcase-outline tx-purple"></i>
+              <div class="media-body">
+                <h1><%= "GH₵ #{@get_current_balance['payout_bal']}" %></h1>
+                <p>Wallet Balance</p>
+              </div><!-- media-body -->
+            </div><!-- media -->
+          </div><!-- card -->
+        </div><!-- col-3 -->
+        <div class="col-sm-6 col-lg-3 mg-t-10 mg-sm-t-0">
+          <div class="card card-status">
+            <div class="media">
+              <i class="icon ion-ios-email-outline tx-teal"></i>
+              <div class="media-body">
+                <h1><%= "#{@get_current_balance['sms_bal']}" %></h1>
+                <p>SMS Balance</p>
+              </div><!-- media-body -->
+            </div><!-- media -->
+          </div><!-- card -->
+        </div><!-- col-3 -->
+<!--        <div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">-->
+<!--          <div class="card card-status">-->
+<!--            <div class="media">-->
+<!--              <i class="icon ion-ios-analytics-outline tx-primary"></i>-->
+<!--              <div class="media-body">-->
+<!--                <h1>$6119</h1>-->
+<!--                <p>Lifetime disbursement</p>-->
+<!--              </div> media-body -->
+<!--            </div> media -->
+<!--          </div> card -->
+<!--        </div> col-3 -->
+
+      </div><!-- row -->
+      <!-- End page -->
+      <div class="section-wrapper mg-t-20">
+        <%= simple_form_for :filter_main, html: { autocomplete: 'off' }, :method => 'get', input_html: {display: "block"} do |f| %>
+          <div class="form-layout">
+            <div class="row">
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <!--                  <input class="form-control" type="text" name="firstname" placeholder="Name">-->
+                  <%= f.input :name, label: false, class: "form-control", :placeholder => "Name" %>
+                  <%#= f.input :perpage, as: :hidden, value: params[:per_page] %>
+                </div>
+              </div><!-- col-4 -->
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <!--                  <input class="form-control" type="text" name="transactions" placeholder="Transaction ID">-->
+                  <%= f.input :trans_id, label: false, class: "form-control", :placeholder => "Transaction ID" %>
+                </div>
+              </div><!-- col-4 -->
+              <div class="col-lg-3">
+                <div class="form-group">
+                  <!--                  <input class="form-control" type="text" name="number" placeholder="Phone Number">-->
+                  <%= f.input :phone_number, label: false, class: "form-control",as: :numeric,input_html:{min: "0"}, :placeholder => "Phone Number" %>
+                </div>
+              </div><!-- col-4 -->
+              <div class="col-lg-3">
+                <div class="form-group mg-b-10-force">
+                  <!--                  <select class="form-control select2 select2-hidden-accessible" data-placeholder="Network"-->
+                  <!--                          tabindex="-1" aria-hidden="true">-->
+                  <!--                    <option label="Select Network"></option>-->
+                  <!--                    <option value="USA">MTN</option>-->
+                  <!--                    <option value="UK">Airtel/Tigo</option>-->
+                  <!--                    <option value="China">Vodafone</option>-->
+                  <!--                  </select>-->
+
+                  <%= f.input :network, label: false, class: "form-control", :placeholder => "Network", collection: [['', '--network--'], ['MTN', 'MTN'], ['TIG', 'Tigo'], ['AIR', 'Airtel'], ['VOD', 'Vodafone']], selected: '', input_html: {:style => 'height: 35px!important;'}, label_method: :second, value_method: :first, :include_hidden => false %>
+                </div>
+              </div>
+
+              <div class="col-lg-3">
+                <div class="form-group mg-b-10-force">
+                  <%= f.input :status, label: false, class: "form-control", :placeholder => "Network", collection: [['nil', '--status--'], ['000', 'Success'], ['001', 'Failed'], ['pending', 'Pending']], selected: "nil", input_html: {:style => 'height: 40px!important;'}, label_method: :second, value_method: :first, :include_hidden => false %>
+                  <%#= f.input :network, label: false, class: "form-control", :placeholder => "Network", collection: [['MTN', 'MTN'], ['TIG', 'Tigo'], ['AIR', 'Airtel'], ['VOD', 'Vodafone']], label_method: :second, value_method: :first, :include_hidden => false %>
+                </div>
+              </div>
+              <div class="col-lg-3 mg-b-10-force">
+                <div class="input-group" style="height: 40px;">
+                  <div class="input-group-prepend" style="height: 40px;">
+                    <div class="input-group-text" style="height: 40px;">
+                      <i class="icon ion-calendar tx-16 lh-0 op-6"></i>
+                    </div>
+                    <!--                    <input type="text" class="form-control fc-datepicker hasDatepicker" placeholder="Start Date"-->
+                    <!--                           id="date">-->
+                    <%= f.input :start_date, label: false, as: :date, html5: true, :placeholder => "Start Date", input_html: {placeholder: 'Start Date', class: "form-control fc-datepicker hasDatepicker", :style => 'height: 40px!important; width: 100%!important;'} %>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="col-lg-3 mg-b-10-force">
+                <div class="input-group" style="height: 40px;">
+                  <div class="input-group-prepend" style="height: 40px;">
+                    <div class="input-group-text" style="height: 40px;">
+                      <i class="icon ion-calendar tx-16 lh-0 op-6"></i>
+                    </div>
+                    <!--                    <input type="text" class="form-control fc-datepicker hasDatepicker" placeholder="Start Date"-->
+                    <!--                           id="date">-->
+                    <%= f.input :end_date, label: false, as: :date, html5: true, :placeholder => "End Date", input_html: {placeholder: 'End Date', class: "form-control fc-datepicker hasDatepicker", :style => 'height: 40px!important; width: 100%!important;'} %>
+                  </div>
+
+                </div>
+              </div>
+
+
+              <div class="col-lg-3">
+                <%#= f.submit "Filter",class: "w3-btn w3-text-white btn-block", style: "background-color: #f95f35 !important;" %>
+                <!--                <button class="btn btn-primary btn-block">Filter</button>-->
+                <%= button_tag(type: 'submit', class: "w3-btn w3-text-white btn-block", style: "background-color: #f95f35 !important;") do %>
+                  <i class="glyphicon glyphicon-filter" aria-hidden="true"></i> Filter
+                <% end %>
+              </div>
+            </div>
+
+          </div>
+        <% end %>
+      </div>
+      <!-- End filter -->
+      <div class="section-wrapper mg-t-20">
+        <div class="table-responsive">
+          <legeend><h3>Payout History</h3></legeend>
+          <table class="table table-bordered mg-b-0">
+            <thead>
+            <!--            <tr>-->
+            <!--              <th>Transaction ID</th>-->
+            <!--              <th>Name</th>-->
+            <!--              <th>Phone Number</th>-->
+            <!--              <th>Amount (GHs)</th>-->
+            <!--              <th>Network</th>-->
+            <!--              <th>Status</th>-->
+            <!--              <th>Date/Time</th>-->
+            <!--            </tr>-->
+
+
+            <tr>
+
+              <th>#</th>
+              <th>Name</th>
+              <th>Transaction ID</th>
+<!--              <th>Client</th>-->
+              <th>Phone number</th>
+              <th>Amount (GHS)</th>
+<!--              <th>Type</th>-->
+              <th>NW</th>
+              <th>Status</th>
+              <th>Description</th>
+              <th>Date/Time</th>
+
+              <th colspan="1"></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <% count = 0 %>
+            <% @transactions.each do |transaction| %>
+              <% count = count + 1 %>
+              <tr>
+                <td><%= count %></td>
+                <td><%= transaction.recipient.recipient_name %></td>
+                <td class="w3-small"><%= transaction.transaction_ref_id %></td>
+<!--                <td class="w3-small"><%#= transaction.recipient.a_client.company_name if transaction.recipient.a_client %></td>-->
+                <td><%= transaction.mobile_number %></td>
+                <td><%= transaction.amount %></td>
+<!--                <td><%#= transaction.trans_type %></td>-->
+
+                <td><%= transaction.network %></td>
+                <td>
+                  <% if transaction.err_code == "000" %>
+                    Success
+                  <% elsif transaction.err_code == "001" %>
+                    Failed
+                  <% else %>
+                    <%= "Pending" %>
+
+                  <% end %>
+
+                </td>
+
+                <td>
+                  <% if transaction.err_code == "000" %>
+                    <%= "#{transaction.nw_resp}" %>
+                  <% elsif transaction.err_code == "001" %>
+                    <%= "#{transaction.nw_resp}" %>
+                  <% else %>
+                    <%= "Pending" %>
+
+                  <% end %>
+
+                </td>
+                <td><%= transaction.created_at.strftime("%F %R") %></td>
+
+                <td><%= link_to 'Details', transaction, class: '"btn btn-success btn-sm btn3d"', style: "background-color: #1A8E06!important;",:remote => true %></td>
+
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+
+          </fieldset>
+          <div class="digg_pagination">
+            <%= will_paginate @transactions %>
+          </div><!-- table-responsive -->
+        </div>
+      </div><!-- container -->
+    </div><!-- slim-mainpanel -->
+  </div>
+`</div>
+<!--<div class="center w3-responsive">-->
+<!--  <center>-->
+
+<!--    <br>-->
+<!--    <div class="row">-->
+
+<!--      <div class="w3-container col-md-8 col-md-offset-2">-->
+<!--        <div style="width: 100%">-->
+<!--          <div class="search_box">-->
+<!--            <h5>Search for specific transactions in the box below-->
+<!--              <span class="glyphicon glyphicon-arrow-down" style="color: teal"></span></h5>-->
+<%#= simple_form_for :filter_main, :method => 'get', input_html: {display: "block"} do |f| %>
+<!--              <div style="display: block">-->
+<!--                <div class="row">-->
+<!--                  <div class="col-md-12">-->
+<%#= f.input :name, label: false, class: "form-control", :placeholder => "Name" %>
+<!--                  </div>-->
+<!--                  <div class="col-md-12" style="margin-top: -6%!important;">-->
+<%#= f.input :trans_id, label: false, class: "form-control", :placeholder => "Transaction ID" %>
+<!--                  </div>-->
+<!--                  <div class="col-md-12" style="margin-top: -6%!important;">-->
+<%#= f.input :phone_number, label: false, class: "form-control", :placeholder => "Phone Number" %>
+<!--                  </div>-->
+<!--                  <div class="col-md-12" style="margin-top: -6%!important;">-->
+<%#= f.input :network, label: "Network", class: "form-control", :placeholder => "Network", collection: [['MTN', 'MTN'], ['TIG', 'Tigo'], ['AIR', 'Airtel'], ['VOD', 'Vodafone']], label_method: :second, value_method: :first, :include_hidden => false %>
+<!--                  </div>-->
+
+<!--                  <div class="col-md-12" style="margin-top: -6%!important;">-->
+<%#= f.input :status, label: "Status", class: "form-control", :placeholder => "Network", collection: [['000', 'Success'], ['001', 'Failed'], ['pending', 'Pending']], label_method: :second, value_method: :first, :include_hidden => false %>
+<!--                  </div>-->
+
+<!--                  <div class="col-md-12" style="margin-top: -6%!important;">-->
+<!--                    <div id="date_div">-->
+<!--                      <div>-->
+<%#= f.input :start_date, label: "Start Date", as: :date, html5: true, :placeholder => "Start Date", :class => "form-control" %>
+<!--                      </div>-->
+<!--                      <div style="margin-top: -6%!important;">-->
+<%#= f.input :end_date, label: "End Date", as: :date, html5: true, class: "form-control" %>
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <div class="col-md-12">-->
+<%#= button_tag(type: 'submit', class: "w3-btn w3-green w3-round w3-small") do %>
+<!--                    <i class="glyphicon glyphicon-filter" aria-hidden="true"></i> Filter-->
+<%# end %>
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<%# end %>
+<!--          </div>-->
+
+<!--        </div>-->
+
+<!--        <div style="display:flex;justify-content:flex-end;align-items:flex-end;">-->
+<!--          <div class="w3-container col-md-4 col-sm-4 w3-right w3-small">-->
+<!--            <div class="wrimagecard wrimagecard-topimage">-->
+<!--              <a href="#">-->
+<!--                <div class="wrimagecard" style="background-color:indigo;height: 20%">-->
+<!--                  <center>-->
+<!--                    <h4 class="w3-text-white">Wallet Balance-->
+<!--                      <div class="pull-right badge" id="WrControls"></div>-->
+<!--                    </h4>-->
+<!--                  </center>-->
+<!--                </div>-->
+<!--                <div class="wrimagecard">-->
+<!--                  <h3 class="w3-center" style="color: indigo"><i><%#= "GHs #{@get_current_balance['payout_bal']}" %></i>-->
+<!--                    <div class="pull-right badge" id="WrControls"></div>-->
+<!--                  </h3>-->
+<!--                </div>-->
+<!--                <div class="wrimagecard w3-teal" style="background-color:#b97aff;height: 20%">-->
+<!--                  <center>-->
+<!--                    <h4 class="w3-text-white">SMS Balance-->
+<!--                      <div class="pull-right badge" id="WrControls"></div>-->
+<!--                    </h4>-->
+<!--                  </center>-->
+<!--                </div>-->
+<!--                <div class="wrimagecard w3-text-teal">-->
+<!--                  <h3 class="w3-center w3-text-teal" style="color: #b97aff"><i><i><%#= "#{@get_current_balance['sms_bal']}" %></i></i>-->
+<!--                    <div class="pull-right badge" id="WrControls"></div>-->
+<!--                  </h3>-->
+<!--                </div>-->
+
+<!--              </a>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--        </div>-->
+<!--        <div class="display-div w3-container">-->
+<!--          Display::-->
+<%#= select_tag :per_page, options_for_select(["", 30, 40, 50, 70, 100, "All"], params[:per_page]), :onchange => "if(this.value){window.location='?per_page='+this.value;}", style: "width: 50px" %>
+<!--        </div>-->
+
+<%# if params[:name].present? || params[:trans_id].present? || params[:phone_number].present? || params[:network].present? %>
+<%#= link_to "CSV", transactions_path(format: "csv", "per_page" => @per_page, "filter_main[mobile_num]" => params[:filter_main]["mobile_num"], "filter_main[trnx_ref]" => params[:filter_main]["trnx_ref"], "filter_main[nw]" => params[:filter_main]["nw"], "filter_main[from_date]" => params[:filter_main]["from_date"], "filter_main[to_date]" => params[:filter_main]["to_date"]), class: "w3-button w3-purple w3-hover w3-tiny w3-round-xxlarge" %>
+<%#= link_to "CSV", transactions_path(format: "csv", "per_page" => @per_page, "params[name]" => params["name"], "params[trans_id]" => params["trans_id"], "params[phone_number]" => params["phone_number"], "params[network]" => params["network"], "params[status]" => params["status"], "params[status]" => params["status"], "params[status]" => params["status"]), class: "w3-button w3-purple w3-hover w3-tiny w3-round-xxlarge" %>
+<%# else %>
+<%#= link_to "CSV", transactions_path(format: "csv", "per_page" => @per_page), class: "w3-button w3-purple w3-hover w3-tiny w3-round-xxlarge" %>
+<%# end %>
+<!--        <fieldset style="width: 100%">-->
+<!--          <div class="center">-->
+<!--            <legend>Transactions History</legend>-->
+<!--            <div style="padding-bottom: 15px;">-->
+<!--              Download::-->
+<!--              <%#= link_to "CSV", '#', id: "csv", class: "w3-button w3-purple w3-hover w3-tiny w3-round-xxlarge" %> |-->
+<!--              <div class="csv_div hidden">-->
+<%#= form_tag transactions_path(format: "csv", "per_page" => @per_page), method: :get, input_html: {display: "block", id: "csv_form"} do %>
+<!--                  <input id="csv_perpage" class="form-control" name="per_page"/>-->
+<!--                  <input id="csv_page" class="form-control" name="page"/>-->
+<!--                  <input name="name" value="<%#= params['name'] %>"/>-->
+<!--                  <input name="trans_id" value="<%#= params['trans_id'] %>"/>-->
+<!--                  <input name="phone_number" value="<%#= params['phone_number'] %>"/>-->
+<!--                  <input name="network" value="<%#= params['network'] %>"/>-->
+<!--                  <input name="status" value="<%#= params['status'] %>"/>-->
+<!--                  <input name="client_code" value="<%#= params['client_code'] %>"/>-->
+<!--                  <input name="trans_type" value="<%#= params['trans_type'] %>"/>-->
+<!--                  <input name="start_date" value="<%#= params['start_date'] %>"/>-->
+<!--                  <input name="end_date" value="<%#= params['end_date'] %>"/>-->
+<!--                  <input type="submit" value="Search" class="btn btn-primary" id="csv_submit">-->
+<%# end %>
+<!--              </div>-->
+
+
+<%#= link_to "Excel", '#', id: "excel", "per_page" => @per_page, class: "w3-button w3-green w3-hover w3-tiny w3-round-xxlarge" %>
+<!--              <div class="excel_div hidden">-->
+<%#= form_tag transactions_path(format: "xls"), method: :get, input_html: {display: "block", id: "excel_form"} do %>
+<!--                  <input id="excel_perpage" class="form-control" name="per_page"/>-->
+<!--                  <input id="excel_page" class="form-control" name="page"/>-->
+<!--                  <input name="name" value="<%#= params['name'] %>"/>-->
+<!--                  <input name="trans_id" value="<%#= params['trans_id'] %>"/>-->
+<!--                  <input name="phone_number" value="<%#= params['phone_number'] %>"/>-->
+<!--                  <input name="network" value="<%#= params['network'] %>"/>-->
+<!--                  <input name="status" value="<%#= params['status'] %>"/>-->
+<!--                  <input name="trans_type" value="<%#= params['trans_type'] %>"/>-->
+<!--                  <input name="client_code" value="<%#= params['client_code'] %>"/>-->
+<!--                  <input name="start_date" value="<%#= params['start_date'] %>"/>-->
+<!--                  <input name="end_date" value="<%#= params['end_date'] %>"/>-->
+<!--                  <input type="submit" value="Search" id="excel_submit">-->
+<%# end %>
+<!--              </div>-->
+
+<%##= link_to "CSV-all", all_trans_excel_path(format: "csv"), method: :get%>  <%#= link_to "Excel-all", all_trans_excel_path(format: "xls"), method: :get%>
+
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="w3-left">-->
+<%#= link_to 'New Payout', new_transaction_path, class: "w3-btn w3-small w3-teal w3-right w3-round-medium", data: {disable_with: 'Please wait'}, :remote => true %>
+<!--          </div>-->
+<!--          <br>-->
+<!--          <br>-->
+
+<!--          <table class="table w3-small table-striped table-hover table-bordered">-->
+
+<!--            <tr id="head">-->
+
+<!--              <th>#</th>-->
+<!--              <th>Name</th>-->
+<!--              <th>Transaction ID</th>-->
+<!--              <th>Client</th>-->
+<!--              <th>Phone number</th>-->
+<!--              <th>Amount (GHS)</th>-->
+<!--              <th>Type</th>-->
+<!--              <th>NW</th>-->
+<!--              <th>Status</th>-->
+<!--              <th>Description</th>-->
+<!--              <th>Date/Time</th>-->
+
+<!--              <th colspan="1"></th>-->
+<!--            </tr>-->
+<%# count = 0 %>
+<%# @transactions.each do |transaction| %>
+<%# count = count + 1 %>
+<!--              <tr>-->
+<!--                <td><%#= count %></td>-->
+<!--                <td><%#= transaction.recipient.recipient_name %></td>-->
+<!--                <td class="w3-small"><%#= transaction.transaction_ref_id %></td>-->
+<!--                <td class="w3-small"><%#= transaction.recipient.a_client.company_name if transaction.recipient.a_client %></td>-->
+<!--                <td><%#= transaction.mobile_number %></td>-->
+<!--                <td><%#= transaction.amount %></td>-->
+<!--                <td><%#= transaction.trans_type %></td>-->
+
+<!--                <td><%#= transaction.network %></td>-->
+<!--                <td>-->
+<%# if transaction.err_code == "000" %>
+<!--                    Success-->
+<%# elsif transaction.err_code == "001" %>
+<!--                    Failed-->
+<%# else %>
+<%#= "Pending" %>
+
+<%# end %>
+
+<!--                </td>-->
+
+<!--                <td>-->
+<%# if transaction.err_code == "000" %>
+<%#= "#{transaction.nw_resp}" %>
+<%# elsif transaction.err_code == "001" %>
+<%#= "#{transaction.nw_resp}" %>
+<%# else %>
+<%#= "Pending" %>
+
+<%# end %>
+
+<!--                </td>-->
+<!--                <td><%#= transaction.created_at.strftime("%F %R") %></td>-->
+
+<!--                <td><%##= link_to 'Close', '#' , class:'"btn btn-danger btn-sm btn3d"'%></td>-->
+<!--                <td><%#= link_to 'Details', transaction, class: '"btn btn-success btn-sm btn3d"', :remote => true %></td>-->
+
+<!--              </tr>-->
+<%# end %>
+<!--          </table>-->
+<%#= link_to 'New', new_transaction_path, class:'btn btn-primary pull-left'%>
+
+<%#= link_to 'New', new_transaction_path, class:'btn btn-primary pull-left'%>
+
+<!--        </fieldset>-->
+<!--        <div class="digg_pagination">-->
+<%#= will_paginate @transactions %>
+<!--        </div>-->
+<!--        <br>-->
+<%#= link_to "show all transactions", all_transactions_path %>
+<!--      </div>-->
+<!--    </div>-->
+
+<!--  </center>-->
+<!--</div>-->
+
+<script>
+    $(document).ready(
+        function () {
+
+            $(".radio_div div input").click(
+                function () {
+                    $("#date_div").addClass("hidden");
+                    $("#search-field").removeClass("hidden");
+                    $("#type_div").addClass("hidden");
+                    $("#network_div").addClass("hidden");
+                    //$("#date_div").fadeIn('slow');
+
+                }
+            );
+
+            $("#id").click(
+                function () {
+                    if ($("#id").is(":checked")) {
+
+                        $("#search-field").attr("placeholder", "Transaction ID");
+
+                    }
+                });
+////////////////////////////////////////////////////////////////////////////
+            $("#name").click(function () {
+
+                if ($("#name").is(":checked")) {
+
+                    $("#search-field").attr("placeholder", "Name");
+
+                }
+            });
+
+//////////////////////////////////////////////////////////////////////////////
+            $("#phone").click(function () {
+                if ($("#phone").is(":checked")) {
+
+                    $("#search-field").attr("placeholder", "Phone number");
+
+                }
+            });
+
+
+            //////////////////////////clicking on filter by date
+            $("#date").click(function () {
+                if ($("#date").is(":checked")) {
+                    $("#date_div").removeClass("hidden");
+                    $("#search-field").addClass("hidden");
+                    $("#network_div").addClass("hidden");
+                    $("#type_div").addClass("hidden");
+                    //$("#date_div").fadeIn('slow');
+
+                }
+            });
+
+            $("#trans_type").click(function () {
+                if ($("#trans_type").is(":checked")) {
+
+                    $("#date-field").val('');
+                    $("#date-field2").val('');
+                    $("#search-field").val('');
+                    $("#type_div").removeClass("hidden");
+                    $("#search-field").addClass("hidden");
+                    $("#network_div").addClass("hidden");
+                    $("#date_div").addClass("hidden");
+
+                    //$("#date_div").fadeIn('slow');
+
+                }
+            });
+
+
+            ///////////////////////////////////////////////
+            $("#network").click(function () {
+                if ($("#network").is(":checked")) {
+                    $("#date-field").val('');
+                    $("#date-field2").val('');
+                    $("#search-field").val('');
+                    $("#date_div").addClass("hidden");
+                    $("#search-field").addClass("hidden");
+                    $("#network_div").removeClass("hidden");
+                    $("#type_div").addClass("hidden");
+                    //$("#date_div").fadeIn('slow');
+                }
+            });
+
+            $('#csv').click(function () {
+                console.log('works!');
+                $('#csv_perpage').val($('#record').val());
+                $('#csv_page').val($('#record').html());
+                $('#csv_submit').click();
+
+            });
+
+            /////////////////////////////////////////////////////////////
+
+            $('#excel').click(function () {
+                $('#excel_perpage').val($('#record').val());
+                $('#excel_page').val($('#record').html());
+                $('#excel_submit').click();
+            });
+
+
+            //////////////////////////////////////////////////////////////////
+            $.fn.datepicker.noConflict = function () {
+                $.fn.datepicker = old;
+                return this;
+            };
+
+            ////////////////////////////////////////////////////////////
+            $(function () {
+                $('#date-field').datepicker({dateFormat: 'yy-mm-dd'});
+            });
+
+            /////////////////////////////////////////////////////
+            $(function () {
+                $('#date-field2').datepicker({dateFormat: 'yy-mm-dd'});
+            });
+        }
+    );
+</script>
+<style>
+  .card {
+    padding-top: 20px;
+    margin: 10px 0 20px 0;
+    background-color: #ffffff;
+    border: 1px solid #d8d8d8;
+    border-top-width: 0;
+    border-bottom-width: 2px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  .card.hovercard {
+    position: relative;
+    width: 300px;
+    padding-top: 0;
+    overflow: hidden;
+    text-align: center;
+    background-color: #fff;
+  }
+
+  .card.hovercard img {
+    width: 300px;
+    height: 200px;
+  }
+
+  .card.hovercard .avatar {
+    position: relative;
+    top: -40px;
+    margin-bottom: -40px;
+  }
+
+  .card.hovercard .avatar img {
+    width: 80px;
+    height: 80px;
+    max-width: 80px;
+    max-height: 80px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+  }
+
+  .card.hovercard .info {
+    padding: 4px 8px 10px;
+  }
+
+  .card.hovercard .info .title {
+    margin-bottom: 4px;
+    font-size: 24px;
+    line-height: 1;
+    color: #262626;
+    vertical-align: middle;
+  }
+
+  .card.hovercard .info .desc {
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 20px;
+    color: #737373;
+    text-overflow: ellipsis;
+  }
+
+  .card.hovercard .bottom {
+    padding: 0 20px;
+    margin-bottom: 17px;
+  }
+
+  .card.people .card-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: inline-block;
+    width: 100%;
+    padding: 10px 20px;
+    line-height: 29px;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  .wrimagecard {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    text-align: left;
+    position: relative;
+    background: #fff;
+    box-shadow: 12px 15px 20px 0px rgba(46, 61, 73, 0.15);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .wrimagecard .fa {
+    position: relative;
+    font-size: 70px;
+  }
+
+  .wrimagecard-topimage_header {
+    padding: 20px;
+  }
+
+  a.wrimagecard:hover, .wrimagecard-topimage:hover {
+    box-shadow: 2px 4px 8px 0px rgba(46, 61, 73, 0.2);
+  }
+
+  .wrimagecard-topimage a {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .wrimagecard-topimage_title {
+    padding: 20px 24px;
+    height: 80px;
+    padding-bottom: 0.75rem;
+    position: relative;
+  }
+
+  .wrimagecard-topimage a {
+    border-bottom: none;
+    text-decoration: none;
+    color: #525c65;
+    transition: color 0.3s ease;
+  }
+
+
+</style>
+
