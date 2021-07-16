@@ -2,6 +2,7 @@ MTN_CODE = "01"
 AIRTEL_CODE = "06"
 TIGO_CODE = "03"
 VODAFONE_CODE = "02"
+BANK_CODE = "07"
 
 
 #LIVE_SERVER = "10.105.85.76"#"184.173.139.74"
@@ -26,11 +27,13 @@ MTN_PARAM = "MTN"
 TIGO_PARAM = "TIG"
 AIRTEL_PARAM = "AIR"
 VODA_PARAM = "VOD"
+BANK_PARAM = "BNK"
 
 MTN = "MTN"
 TIGO = "TIG"
 AIRTEL = "AIR"
 VODAFONE = "VOD"
+BANK = "BNK"
 
 #other constants
 DR_REF = "Disb-Debit"
@@ -57,7 +60,11 @@ TRFUND = "TR"
 
 #amfp
 END_POINT = '/sendRequest'#'/execRequest'
-AMFP_URL= 'http://10.136.77.134:8218'
+
+AMFP_URL= 'http://10.136.77.134:7016' # live test
+# AMFP_URL= 'http://10.136.168.7:7016'  # test
+# AMFP_URL= 'http://10.105.85.76:7016'
+# AMFP_URL= 'http://10.136.77.134:8218'
 
 # AMFP_URL = 'http://10.105.85.76:7016'#"https://appsnmobileagent.com:8215/"
 # AMFP_URL= 'http://10.136.168.7:7016'#"https://appsnmobileagent.com:8215/"
@@ -106,6 +113,7 @@ DISBURSE = "Disburse"
 
 # API_KEY = "NZwUeG4g7Bst6JbnQv/BkuAusc2NIhlxWTTOWL0SEq27ARDj/I1/pbjns04iVeDkPKtOuhdEvLDzw99QyhbBlw=="
 SMS_END_POINT = "/sendSms"
+# BNK_END_POINT = "/sendSms"
 #CHECK_BAL_END_POINT = "/check_wallet_balance"
 CHECK_BAL_END_POINT = "/portal_wallet_bal_req"
 

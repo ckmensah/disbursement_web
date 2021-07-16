@@ -88,6 +88,7 @@ class PremiumClientsController < ApplicationController
       @new_client.success_msg = premium_client_params[:success_msg] unless premium_client_params[:success_msg].blank?
       @new_client.needs_approval = premium_client_params[:needs_approval] unless premium_client_params[:needs_approval].blank?
       @new_client.sender_id = premium_client_params[:sender_id] unless premium_client_params[:sender_id].blank?
+      @new_client.acronym = premium_client_params[:acronym] unless premium_client_params[:acronym].blank?
       @new_client.user_id = current_user.id
       @new_client.updated_at = Time.now
 

@@ -1,4 +1,6 @@
-recipient_name,mobile_number,network,amount
-Kojo Mensah,205869653,VOD,0.1
-Albert Lawer,261927288,AIR,0.1
-Jerry Bansah,247915505,MTN,0.1
+recipient_name,mobile_number,network,amount,sort_code,swift_code,bank_code
+Jerry Bansah,266000350,AIR,0.1,,
+Andrew Nii,201659215,VOD,0.1,,
+Clara Quaye,248021199,MTN,0.1,,
+Kojo Mensah,4531080004237444,BNK,0.1,030148,BARCGHAC,BARC
+Andy Tetteh,300000987651,BNK,0.1,130105,ECOCGHACXXX,ECOC

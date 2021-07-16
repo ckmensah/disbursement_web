@@ -29,6 +29,10 @@ class RecipientsController < ApplicationController
     send_file("#{Rails.root}/public/sample.csv", filename: "sample.csv", type: "application/csv")
   end
 
+  def bank_sample_csv
+    send_file("#{Rails.root}/public/sample_bank_code.csv", filename: "sample_bank_code.csv", type: "application/csv")
+  end
+
   # GET /recipients/new
   def new
     if current_user.is_client
@@ -571,7 +575,7 @@ class RecipientsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def recipient_params
-    params.require(:recipient).permit(:disburse_status, :transaction_id, :mobile_number, :network, :amount, :csv_uploads_id, :group_id, :status, :changed_status, :client_code, :user_id, :recipient_name)
+    params.require(:recipient).permit(:disburse_status, :transaction_id, :mobile_number, :network, :amount, :csv_uploads_id, :group_id, :status, :changed_status, :client_code, :user_id, :swift_code,:sort_code, :bank_code, :recipient_name)
   end
 end
 

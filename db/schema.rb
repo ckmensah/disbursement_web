@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_27_111454) do
+ActiveRecord::Schema.define(version: 2021_06_02_103524) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -167,6 +167,9 @@ ActiveRecord::Schema.define(version: 2020_11_27_111454) do
     t.string "client_code"
     t.string "csv_uploads_id"
     t.string "reference"
+    t.string "sort_code"
+    t.string "swift_code"
+    t.string "bank_code"
   end
 
   create_table "roles", id: :serial, force: :cascade do |t|
@@ -230,6 +233,9 @@ ActiveRecord::Schema.define(version: 2020_11_27_111454) do
     t.integer "recipient_id"
     t.string "acronym", limit: 50
     t.string "reference"
+    t.string "sort_code"
+    t.string "swift_code"
+    t.string "bank_code"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|

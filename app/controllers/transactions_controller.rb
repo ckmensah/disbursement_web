@@ -146,7 +146,9 @@ class TransactionsController < ApplicationController
 
       if !the_search.present?
         if current_user.is_client
-          @transactions = Transaction.joiner(current_user.client_code).where(the_search).where("premium_clients.acronym = '#{current_user.client.acronym}'").paginate(:page => @page, :per_page => @per_page).order("created_at desc")
+          @client = PremiumClient.where(client_code: current_user.client_code, changed_status: false, status: true).order(updated_at: :desc).first
+          client_acronym = @client ? @client.acronym : ''
+          @transactions = Transaction.joiner(current_user.client_code).where(the_search).where("premium_clients.acronym = '#{client_acronym}'").paginate(:page => @page, :per_page => @per_page).order("created_at desc")
           @user_app = PremiumClient.where(client_code: current_user.client_code).active.order('updated_at DESC')[0]
           @transaction_rep = Transaction.joiner(current_user.client_code).order("created_at desc")
         else
@@ -165,7 +167,9 @@ class TransactionsController < ApplicationController
       else
         the_search = the_search + "transactions.created_at is not null"
         if current_user.is_client
-          @transactions = Transaction.joiner(current_user.client_code).where("premium_clients.acronym = '#{current_user.client.acronym}'").where(the_search).paginate(page: @page, per_page: @per_page).order("created_at desc")
+          @client = PremiumClient.where(client_code: current_user.client_code, changed_status: false, status: true).order(updated_at: :desc).first
+          client_acronym = @client ? @client.acronym : ''
+          @transactions = Transaction.joiner(current_user.client_code).where("premium_clients.acronym = '#{client_acronym}'").where(the_search).paginate(page: @page, per_page: @per_page).order("created_at desc")
           @user_app = PremiumClient.where(client_code: current_user.client_code).active.order('updated_at DESC')[0]
           @transaction_rep = Transaction.joiner(current_user.client_code).where("premium_clients.acronym = '#{current_user.client.acronym}'").where(the_search).order("created_at desc")
         else
@@ -189,9 +193,11 @@ class TransactionsController < ApplicationController
 
     else
       if current_user.is_client
-        @transactions = Transaction.joiner(current_user.client_code).where(the_search).where("premium_clients.acronym = '#{current_user.client.acronym}'").paginate(:page => @page, :per_page => @per_page).order("created_at desc")
+        @client = PremiumClient.where(client_code: current_user.client_code, changed_status: false, status: true).order(updated_at: :desc).first
+        client_acronym = @client ? @client.acronym : ''
+        @transactions = Transaction.joiner(current_user.client_code).where(the_search).where("premium_clients.acronym = '#{client_acronym}'").paginate(:page => @page, :per_page => @per_page).order("created_at desc")
         @user_app = PremiumClient.where(client_code: current_user.client_code).active.order('updated_at DESC')[0]
-        @transaction_rep = Transaction.joiner(current_user.client_code).where("premium_clients.acronym = '#{current_user.client.acronym}'").order("created_at desc")
+        @transaction_rep = Transaction.joiner(current_user.client_code).where("premium_clients.acronym = '#{client_acronym}'").order("created_at desc")
       else
         @user_app = PremiumClient.where(user_id: current_user.id).active.order('updated_at DESC')[0]
         @user_app_ = PremiumClient.where(user_id: current_user.id).active.order('updated_at DESC').last
@@ -371,7 +377,9 @@ class TransactionsController < ApplicationController
 
       if !the_search.present?
         if current_user.is_client
-          @transactions = Transaction.joiner(current_user.client_code).where(the_search).where("premium_clients.acronym = '#{current_user.client.acronym}'").paginate(:page => @page, :per_page => @per_page).order("created_at desc")
+          @client = PremiumClient.where(client_code: current_user.client_code, changed_status: false, status: true).order(updated_at: :desc).first
+          client_acronym = @client ? @client.acronym : ''
+          @transactions = Transaction.joiner(current_user.client_code).where(the_search).where("premium_clients.acronym = '#{client_acronym}'").paginate(:page => @page, :per_page => @per_page).order("created_at desc")
           @user_app = PremiumClient.where(client_code: current_user.client_code).active.order('updated_at DESC')[0]
           @transaction_rep = Transaction.joiner(current_user.client_code).order("created_at desc")
         else
@@ -390,9 +398,11 @@ class TransactionsController < ApplicationController
       else
         the_search = the_search + "transactions.created_at is not null"
         if current_user.is_client
-          @transactions = Transaction.joiner(current_user.client_code).where("premium_clients.acronym = '#{current_user.client.acronym}'").where(the_search).paginate(page: @page, per_page: @per_page).order("created_at desc")
+          @client = PremiumClient.where(client_code: current_user.client_code, changed_status: false, status: true).order(updated_at: :desc).first
+          client_acronym = @client ? @client.acronym : ''
+          @transactions = Transaction.joiner(current_user.client_code).where("premium_clients.acronym = '#{client_acronym}'").where(the_search).paginate(page: @page, per_page: @per_page).order("created_at desc")
           @user_app = PremiumClient.where(client_code: current_user.client_code).active.order('updated_at DESC')[0]
-          @transaction_rep = Transaction.joiner(current_user.client_code).where("premium_clients.acronym = '#{current_user.client.acronym}'").where(the_search).order("created_at desc")
+          @transaction_rep = Transaction.joiner(current_user.client_code).where("premium_clients.acronym = '#{client_acronym}'").where(the_search).order("created_at desc")
         else
           @user_app = PremiumClient.where(user_id: current_user.id).active.order('updated_at DESC')[0]
           @user_app_ = PremiumClient.where(user_id: current_user.id).active.order('updated_at DESC').last
@@ -414,9 +424,11 @@ class TransactionsController < ApplicationController
 
     else
       if current_user.is_client
-        @transactions = Transaction.joiner(current_user.client_code).where(the_search).where("premium_clients.acronym = '#{current_user.client.acronym}'").paginate(:page => @page, :per_page => @per_page.to_i).order("created_at desc")
+        @client = PremiumClient.where(client_code: current_user.client_code, changed_status: false, status: true).order(updated_at: :desc).first
+        client_acronym = @client ? @client.acronym : ''
+        @transactions = Transaction.joiner(current_user.client_code).where(the_search).where("premium_clients.acronym = '#{client_acronym}'").paginate(:page => @page, :per_page => @per_page.to_i).order("created_at desc")
         @user_app = PremiumClient.where(client_code: current_user.client_code).active.order('updated_at DESC')[0]
-        @transaction_rep = Transaction.joiner(current_user.client_code).where("premium_clients.acronym = '#{current_user.client.acronym}'").order("created_at desc")
+        @transaction_rep = Transaction.joiner(current_user.client_code).where("premium_clients.acronym = '#{client_acronym}'").order("created_at desc")
       else
         @user_app = PremiumClient.where(user_id: current_user.id).active.order('updated_at DESC')[0]
         @user_app_ = PremiumClient.where(user_id: current_user.id).active.order('updated_at DESC').last
@@ -562,6 +574,10 @@ class TransactionsController < ApplicationController
           format.html {redirect_to "/transactions/new?after_upload=#{params[:after_upload]}", alert: 'Invalid amount.'}
         elsif the_feed_back.to_i == 10
           format.html {redirect_to "/transactions/new?after_upload=#{params[:after_upload]}", alert: 'Please provide a reference between 10 and 25 characters only.'}
+        elsif the_feed_back.to_i == 11
+          format.html {redirect_to "/transactions/new?after_upload=#{params[:after_upload]}", alert: 'Sort code or swift code cannot be blank for bank transactions.'}
+        elsif the_feed_back.to_i == 12
+          format.html {redirect_to "/transactions/new?after_upload=#{params[:after_upload]}", alert: 'Least amount for bank transaction is 1 cedi.'}
         else
 
         end
@@ -867,7 +883,7 @@ class TransactionsController < ApplicationController
   def transaction_params
     params.require(:transaction).permit(:transaction_ref_id, :balance, :mobile_number, :amount, :trans_type, :status,
                                         :network, :err_code, :acronym, :nw_resp, :voucher_code, :payout_id, :csv_uploads_id,:recipient_id,
-                                        :mobile_num, :netwk, :amt, :rec_name, :client_code, :disburse_status, :user_id)
+                                        :mobile_num, :netwk, :amt, :rec_name, :client_code, :disburse_status, :user_id,:bank_code,:sort_code,:swift_code)
 
 
   end

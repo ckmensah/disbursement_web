@@ -57,6 +57,8 @@ gem 'devise'
 
 gem "paperclip"
 
+gem "bigdecimal"
+
 gem "chartkick"
 
 gem 'groupdate'

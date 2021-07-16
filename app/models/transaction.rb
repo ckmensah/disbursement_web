@@ -6,6 +6,7 @@ class Transaction < ActiveRecord::Base
   require 'bcrypt'
   require 'sendgrid-ruby'
   require 'csv'
+  require 'bigdecimal'
 
   include SendGrid
   include BCrypt
@@ -140,6 +141,10 @@ class Transaction < ActiveRecord::Base
       amount = recipient.amount
       nw = recipient.network
       reference = recipient.reference
+      sort_code = recipient.sort_code
+      swift_code = recipient.swift_code
+      bank_code = recipient.bank_code
+      recipient_name = recipient.recipient_name
 
       nw_code = Transaction.get_nw_code(nw)
 
@@ -149,7 +154,25 @@ class Transaction < ActiveRecord::Base
         logger.info "Recipient Exists::::#{recipient.inspect}"
       elsif !check_recipient_trans
         if trans_type == CREDIT
-          transaction = Transaction.new(
+          if nw == BANK
+            transaction = Transaction.create(
+              mobile_number: mobile_number,
+              trans_type: "MTC",
+              amount: amount,
+              network: BANK,
+              payout_id: nil,
+              recipient_id: recipient.id,
+              transaction_ref_id: trnx_id,
+              trnx_type: BANK,
+              status: 0, #about to start first cycle
+              reference: reference,
+              acronym: client.acronym,
+              sort_code: sort_code,
+              bank_code: bank_code
+              # recipient_name: recipient_name
+            )
+          else
+            transaction = Transaction.new(
               mobile_number: mobile_number,
               trans_type: DISBURSE,
               payout_id: nil,
@@ -162,7 +185,9 @@ class Transaction < ActiveRecord::Base
               reference: reference,
 
               acronym: client.acronym
-          )
+            )
+          end
+
           transaction.save(validate: false)
 
           updated_recipient = Recipient.where(id: recipient.id).update_all(disburse_status: true, transaction_id: trnx_id)
@@ -189,7 +214,13 @@ class Transaction < ActiveRecord::Base
           logger.info "TRANSACTION OBJECT: #{transaction.inspect}"
 
         end
-        Transaction.newMobilePayment(mobile_number, amount, nw_code, CREDIT_MM_CALLBACK_URL, client.client_id, transaction, trans_type, trnx_id, "", reference)
+        # if nw == BANK
+        # Transaction.newMobilePayment(mobile_number, amount, nw_code, CREDIT_MM_CALLBACK_URL, client.client_id, transaction, trans_type, trnx_id, "", reference, sort_code, bank_code)
+        # else
+          Transaction.newMobilePayment(mobile_number, amount, nw_code, CREDIT_MM_CALLBACK_URL, client.client_id, transaction, trans_type, trnx_id, "", reference, sort_code, bank_code, recipient_name)
+
+          # Transaction.newMobilePayment(mobile_number, amount, nw_code, CREDIT_MM_CALLBACK_URL, client.client_id, transaction, trans_type, trnx_id, "", reference)
+        # end
       else
       end
 
@@ -558,7 +589,7 @@ err_code nw_resp }
     end
   end
 
-  def self.newMobilePayment(customer_number, amt, nw_code, callback_url, client_id, transaction, trans_type = CREDIT, trans_id, voucher_code, reference)
+  def self.newMobilePayment(customer_number, amt, nw_code, callback_url, client_id, transaction, trans_type = CREDIT, trans_id, voucher_code, reference, sort_code, bank_code, recipient_name)
     #trnx_type = PN, CR, DR, NW
     url = AMFP_URL
     endpoint = END_POINT
@@ -577,7 +608,7 @@ err_code nw_resp }
     puts "CLIENT ACRONYM: #{client_acronymm}"
     logger.info "CLIENT ACRONYM: #{client_acronymm}"
 
-    if [AIRTEL_PARAM, TIGO_PARAM, VODA_PARAM, MTN_PARAM].include? nw_code
+    if [AIRTEL_PARAM, TIGO_PARAM, VODA_PARAM, MTN_PARAM, BANK_PARAM].include? nw_code
       nw_param = nw_code
     else
       nw_param = get_network_param(nw_code)
@@ -644,6 +675,22 @@ err_code nw_resp }
           :ts => ts,
           :client_id => client_id,
       }
+    elsif nw_code == BANK_CODE
+      payload = {
+        :customer_number => customer_number,
+        :reference => ref,
+        :amount => amt,
+        :exttrid => transaction.id,
+        :nw => nw_param,
+        :trans_type => "MTC",
+        :callback_url => callback_url,
+        :ts => ts,
+        :service_id => client_id,
+        :sort_code => sort_code,
+        :bank_code => bank_code,
+        :recipient_name => recipient_name
+      }
+
     else
       payload = {
           # :merchant_number=> merchant_number,
@@ -717,9 +764,13 @@ err_code nw_resp }
     end
   end
 
+
+
+
   def self.import_contacts(file, client_code, user_id, reference)
 
     positive_numbers = /^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$/
+    positives = /\d+/
     letters_only = /^[A-Za-z\s]+$/
 
     @recipients = []
@@ -787,39 +838,40 @@ err_code nw_resp }
 
 
         readVal = readVal.split(',').map {|val| val.strip}
-        last = readVal[3].split("\n")
+        last = readVal[6].split("\n")
         last[0] = last[0].strip
-        if last[0] == "amount\r"
-          last[0] = "amount"
+        if last[0] == "bank_code\r"
+          last[0] = "bank_code"
         end
         logger.info "First: #{readVal[0].inspect}"
         logger.info "Second: #{readVal[1].inspect}"
         logger.info "Third: #{readVal[2].inspect}"
+        logger.info "Fourth: #{readVal[3].inspect}"
+        logger.info "Fifth: #{readVal[4].inspect}"
+        logger.info "Sixth: #{readVal[5].inspect}"
         logger.info "Last: #{last.inspect}"
         logger.info "HERE IS THE READVAL THINGY #{readVal.inspect}"
 
 
-        if readVal[0] == "recipient_name" && readVal[1] == "mobile_number" && readVal[2] == "network" && last[0] == "amount"
+        if readVal[0] == "recipient_name" && readVal[1] == "mobile_number" && readVal[2] == "network" && readVal[3] == "amount" && readVal[4] == "sort_code" && readVal[5] == "swift_code" && last[0] == "bank_code"
           CSV.foreach(file.path, headers: true) do |row|
             logger.info 'This is it-----'
             logger.info row.inspect
 
             if row["mobile_number"].present? && row["network"].present? && row["amount"].present? && row["recipient_name"].present?
               unless row["amount"].match(positive_numbers)
-
                 the_msg = 8
               end
-              if row["mobile_number"].scan(/\D/i).length == 0
+              name = User.titling(row['recipient_name']) #name
+              logger.info "NAME: #{name}"
+
+              if row["network"] != "BNK" && row["mobile_number"].scan(/\D/i).length == 0
                 if !row["mobile_number"].match(positive_numbers)
                   the_msg = 4
                 else
                   number = phone_formatter(row["mobile_number"])
-
                   number = 0 unless number
-
                   network = row['network'].upcase
-                  name = User.titling(row['recipient_name']) #name
-                  logger.info "NAME: #{name}"
 
                   unless networks.include?(network)
                     #Recipient.create(recipient_name: name, mobile_number: number, disburse_status: false, client_code: client_code, status: false, fail_reason: "Unknown network")
@@ -838,7 +890,6 @@ err_code nw_resp }
 
                   if row["recipient_name"].match(positive_numbers) #if !row["recipient_name"].match(letters_only)
                     #Recipient.create(recipient_name: name, mobile_number: number, disburse_status: false, client_code: client_code, status: false, fail_reason: "No recipient name")
-
                     return the_msg = 3
                   end
 
@@ -854,7 +905,21 @@ err_code nw_resp }
                     the_msg = 4
                     #Recipient.create(recipient_name: name, mobile_number: number, network: network, disburse_status: false, client_code: client_code, status: false, fail_reason: "Wrong mobile number")
                   end
+
                 end
+
+              elsif row["network"] == "BNK"
+                if row["sort_code"].present? && row["swift_code"].present? && row["bank_code"].present?
+                  mob_num = row["mobile_number"]
+                  mob_num = mob_num.to_f.to_i.to_s
+                  logger.info " the mob is #{mob_num}@@@@@@@@@@@"
+                  @recipients << Recipient.new(recipient_name: name, mobile_number: mob_num, network: row["network"], csv_uploads_id: csv_upload_id, amount: row['amount'], disburse_status: false, client_code: client_code,sort_code: row['sort_code'], swift_code: row['swift_code'], bank_code:row['bank_code'], user_id: user_id, reference: ref )
+                else
+                  the_msg = 11
+                end
+                # unless row["amount"] >= 1
+                #   the_msg = 12
+                # end
               else
                 the_msg = 5
                 #Recipient.create(recipient_name: name, mobile_number: number, network: network, disburse_status: false, client_code: client_code, status: false, fail_reason: "Wrong mobile number format")
@@ -897,20 +962,22 @@ err_code nw_resp }
       return TIGO_CODE
     when VODAFONE;
       return VODAFONE_CODE
+    when BANK;
+      return BANK_CODE
     else
       false
     end
   end
 
   def self.phone_formatter(number)
-    #changes phone number format to match 233247876554
+    #changes customer number format to match 233247876554 || accountnumber
+    the_match = /\d+/
+
     if number[0] == '0'
       num = number[1..number.size]
       "233" + num
-
     elsif number[0] == '+'
       number[1..number.size]
-
     elsif number[0..2] == '233'
       number
     elsif number[0] == '2' or number[0] == '5'
@@ -918,7 +985,13 @@ err_code nw_resp }
     else
       false
     end
+  end
 
+  def self.acount_formatter(acct_number)
+    the_match = /\d+/
+    if acct_number.match(the_match) && acct_number.length >= 12
+      acct_number
+    end
   end
 
   def self.get_network_param(code)
@@ -932,7 +1005,8 @@ err_code nw_resp }
       return TIGO_PARAM
     when AIRTEL_CODE;
       return AIRTEL_PARAM
-
+    when BANK_CODE;
+      return BANK_PARAM
     else
       false
     end
@@ -1079,7 +1153,7 @@ err_code nw_resp }
     puts "CLIENT CODE: #{client_code}"
     logger.info "CLIENT CODE: #{client_code}"
     logger.info "PAYOUT ID: #{payout_id}"
-    if !payout_id.present?
+    if !payout_id.nil? #!payout_id.present?
       user_id_pay = Payout.where(id: payout_id).order('updated_at desc').first
       logger.info "Payout Details: #{user_id_pay.inspect}"
       client = PremiumClient.where(user_id: user_id_pay.user_id).active.order('created_at desc').first
@@ -1168,8 +1242,8 @@ err_code nw_resp }
     #begin
     res = SMS_CONN.post do |req|
       req.url url_endpoint
-      req.options.timeout = 30 # open/read timeout in seconds
-      req.options.open_timeout = 30 # connection open timeout in seconds
+      req.options.timeout = 180 # open/read timeout in seconds
+      req.options.open_timeout = 180 # connection open timeout in seconds
       req['Authorization'] = "#{client_key}:#{signature}"
       req.body = api_params
     end
@@ -1202,6 +1276,8 @@ err_code nw_resp }
       return TIGO
     when AIRTEL_CODE;
       return AIRTEL
+    when BANK_CODE;
+      return BANK
 
     else
       false

@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   patch '/users/:id' => 'users#update', :as => 'update_user'
 
   get 'recipients/sample_csv' => 'recipients#sample_csv', as: :sample_csv
+  get 'recipients/bank_sample_csv' => 'recipients#bank_sample_csv', as: :bank_sample_csv
   post '/recipients/recipients_import' => 'recipients#recipients_import', as: :recipients_import
   get '/recipients/failed' => 'recipients#failed', as: :failed
 
