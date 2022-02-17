@@ -575,9 +575,9 @@ class TransactionsController < ApplicationController
         elsif the_feed_back.to_i == 10
           format.html {redirect_to "/transactions/new?after_upload=#{params[:after_upload]}", alert: 'Please provide a reference between 10 and 25 characters only.'}
         elsif the_feed_back.to_i == 11
-          format.html {redirect_to "/transactions/new?after_upload=#{params[:after_upload]}", alert: 'Sort code or swift code cannot be blank for bank transactions.'}
+          format.html {redirect_to "/transactions/new?after_upload=#{params[:after_upload]}", alert: 'Bank code cannot be blank for bank transactions.'}
         elsif the_feed_back.to_i == 12
-          format.html {redirect_to "/transactions/new?after_upload=#{params[:after_upload]}", alert: 'Least amount for bank transaction is 1 cedi.'}
+          format.html {redirect_to "/transactions/new?after_upload=#{params[:after_upload]}", alert: 'Invalid alert number for bank transaction.'}
         else
 
         end

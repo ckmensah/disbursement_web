@@ -142,7 +142,7 @@ class PayoutsController < ApplicationController
 
   def disburse_callback
     logger.info "Callback Working"
-    logger.info params.inspect
+    logger.info "COntenet of the params " + params.inspect
     # {"message": "Success", "trans_status": "000/200", "trans_id": "MP151224.1621.C00005", "trans_ref": "1512241630284"}
 
     message = params[:message]
@@ -157,8 +157,8 @@ class PayoutsController < ApplicationController
     elsif !check_for_callback
       trans_status_split = trans_status.split("/")
 
-      trans_info = Transaction.where(transaction_ref_id: trans_ref).order('updated_at DESC')[0]
-      recipient_info = Recipient.where(id: trans_info.recipient_id).order('updated_at DESC').first
+      trans_info = Transaction.where(transaction_ref_id: trans_ref).order(updated_at: :desc).first
+      recipient_info = Recipient.where(id: trans_info.recipient_id).order(updated_at: :desc).first
 
       logger.info trans_info.inspect
       logger.info "###############################################################"
@@ -168,7 +168,13 @@ class PayoutsController < ApplicationController
       logger.info "###############################################################"
       if trans_status_split[0] == '000' || message == "Success"
         update_trans = Transaction.where(transaction_ref_id: trans_ref).update_all(status: true, err_code: trans_status_split[0], nw_resp: message)
+        if trans_info.phone_number.present?
+        # phone_numb = trans_info.phone_number[0]
+        # logger.info " @@@@@@@@@@@@@@  #{phone_numb.inspect} @@@@@@@@@@@@@@@@@@@"
+        sms = Transaction.sendPayoutMsg(trans_info.phone_number, trans_info.payout_id, recipient_info.client_code, trans_info.amount, trans_ref, recipient_info.recipient_name, trans_info.reference)
+        else
         sms = Transaction.sendPayoutMsg(trans_info.mobile_number, trans_info.payout_id, recipient_info.client_code, trans_info.amount, trans_ref, recipient_info.recipient_name, trans_info.reference)
+        end
       else
         update_trans = Transaction.where(transaction_ref_id: trans_ref).update_all(status: false, err_code: trans_status_split[0], nw_resp: message)
       end
@@ -180,6 +186,7 @@ class PayoutsController < ApplicationController
       logger.info "###############################################################"
       logger.info "###############################################################"
       logger.info trans_info.inspect
+      logger.debug "the content of trans_status split " + trans_status_split[0].inspect
       logger.info "###############################################################"
       logger.info "###############################################################"
 
@@ -207,6 +214,10 @@ class PayoutsController < ApplicationController
     end
 
     render :nothing => true, :status => trans_status_split[0], :content_type => 'application/json'
+    # render fallback_location: transactions_path, :status => trans_status_split[0], notice: "Your transactions have been processed"
+    # respond_to do |format|
+    #   format.html {redirect_to transactions_index_path,:status => trans_status_split[0], notice: "Your transactions have been processed."}
+    # end
   end
 
 

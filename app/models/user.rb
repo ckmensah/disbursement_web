@@ -5,9 +5,9 @@ class User < ActiveRecord::Base
   belongs_to :client, class_name: "PremiumClient", foreign_key: :client_code
   # Include default devise modules. Others available are:
   # :confirmable, :lockable,  and :omniauthable
-  devise :database_authenticatable, :registerable, :timeoutable,
+  devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable
-  #
+  # timeoutable
   validates :password, presence: true, :unless => :update?
   # validates :username, presence: true, :unless => :update?
   validates :password_confirmation, presence: true, :unless => :update?

@@ -1,5 +1,14 @@
 #require_relative '../../app/controllers/application_controller'
 class RecipientGroup < ActiveRecord::Base
+  require 'json'
+  require 'faraday'
+  require 'bcrypt'
+  require 'sendgrid-ruby'
+  require 'csv'
+  require 'bigdecimal'
+
+  include SendGrid
+
   belongs_to :client, class_name: "PremiumClient", foreign_key: :client_code
   belongs_to :app_cat, class_name: "ApproversCategory", foreign_key: :approver_cat_id
 
@@ -19,9 +28,7 @@ class RecipientGroup < ActiveRecord::Base
     list.each do |recipient|
       trnx_id = Transaction.genUniqueIDNew(client.acronym)
       mobile_number = recipient.mobile_number
-
       #recipient.transaction_id = trnx_id
-
       recipient.transaction_id = trnx_id
       # acct = ClientAcctNumber.find_by(client_code: client_code, status: true, changed_status: false)
       # if acct.nil?
@@ -32,28 +39,49 @@ class RecipientGroup < ActiveRecord::Base
       # acct_no = acct.disbursement_acct
       amount = recipient.amount
       nw = recipient.network
-
+      reference = recipient.reference
+      bank_code = recipient.bank_code
+      recipient_name = recipient.recipient_name
+      phone_number = recipient.phone_number
 
       nw_code = Transaction.get_nw_code(nw)
 
       if trans_type == CREDIT
-        transaction = Transaction.create(
+        if nw == BANK
+          transaction = Transaction.create(
             mobile_number: mobile_number,
-            trans_type: DISBURSE,
+            trans_type: "MTC",
+            amount: amount,
+            network: BANK,
             payout_id: payout_id,
             recipient_id: recipient.id,
-            amount: amount,
-            network: nw,
             transaction_ref_id: trnx_id,
-            trnx_type: CREDIT,
+            trnx_type: BANK,
             status: 0, #about to start first cycle
+            reference: reference,
+            acronym: client.acronym,
+            bank_code: bank_code,
+            phone_number: phone_number
+          )
+        else
+          transaction = Transaction.new(
+              mobile_number: mobile_number,
+              trans_type: DISBURSE,
+              payout_id: payout_id,
+              recipient_id: recipient.id,
+              amount: amount,
+              network: nw,
+              transaction_ref_id: trnx_id,
+              trnx_type: CREDIT,
+              status: 0, #about to start first cycle
 
-            acronym: client.acronym
-        )
+              acronym: client.acronym
+          )
+        end
+
         transaction.save(validate: false)
 
         logger.info "TRANSACTION OBJECT: #{transaction.inspect}"
-
         # params = {
         #     account_no: acct_no,
         #     exttrxnid: trnx_id,
@@ -116,7 +144,7 @@ class RecipientGroup < ActiveRecord::Base
       logger.info "+++++#{trnx_id}++++++++++++++++++++++++++++"
       logger.info "-----------------------------"
       logger.info "-----------------------------"
-      Transaction.newMobilePayment(mobile_number, amount, nw_code, CREDIT_MM_CALLBACK_URL, client.client_id, transaction, trans_type, trnx_id, "")
+      Transaction.newMobilePayment(mobile_number, amount, nw_code, CREDIT_MM_CALLBACK_URL, client.client_id, transaction, trans_type, trnx_id, "", reference, bank_code, recipient_name)
 
       # }
       # else

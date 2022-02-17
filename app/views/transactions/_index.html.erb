@@ -37,8 +37,8 @@
         <th>Network</th>
         <th>Amount</th>
         <th>Reference</th>
-        <th>Sort Code</th>
-        <th>bank Code</th>
+        <th>Bank Code</th>
+        <th>Alert Number</th>
         <% if @user_app.needs_approval %>
           <th>Group</th>
         <% elsif !@user_app.needs_approval %>
@@ -66,8 +66,8 @@
           <td><%= recipient.network %></td>
           <td><%= recipient.amount %></td>
           <td><%= recipient.reference %></td>
-          <td><%= recipient.sort_code %></td>
           <td><%= recipient.bank_code %></td>
+          <td><%= recipient.phone_number %></td>
           <% if @user_app.needs_approval %>
             <td><%= recipient.group.group_desc if recipient.group %></td>
           <% elsif !@user_app.needs_approval %>

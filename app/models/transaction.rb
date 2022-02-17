@@ -141,10 +141,11 @@ class Transaction < ActiveRecord::Base
       amount = recipient.amount
       nw = recipient.network
       reference = recipient.reference
-      sort_code = recipient.sort_code
-      swift_code = recipient.swift_code
+      # sort_code = recipient.sort_code
+      # swift_code = recipient.swift_code
       bank_code = recipient.bank_code
       recipient_name = recipient.recipient_name
+      phone_number = recipient.phone_number
 
       nw_code = Transaction.get_nw_code(nw)
 
@@ -167,8 +168,9 @@ class Transaction < ActiveRecord::Base
               status: 0, #about to start first cycle
               reference: reference,
               acronym: client.acronym,
-              sort_code: sort_code,
-              bank_code: bank_code
+              # sort_code: sort_code,
+              bank_code: bank_code,
+              phone_number: phone_number
               # recipient_name: recipient_name
             )
           else
@@ -214,23 +216,15 @@ class Transaction < ActiveRecord::Base
           logger.info "TRANSACTION OBJECT: #{transaction.inspect}"
 
         end
-        # if nw == BANK
-        # Transaction.newMobilePayment(mobile_number, amount, nw_code, CREDIT_MM_CALLBACK_URL, client.client_id, transaction, trans_type, trnx_id, "", reference, sort_code, bank_code)
-        # else
-          Transaction.newMobilePayment(mobile_number, amount, nw_code, CREDIT_MM_CALLBACK_URL, client.client_id, transaction, trans_type, trnx_id, "", reference, sort_code, bank_code, recipient_name)
 
-          # Transaction.newMobilePayment(mobile_number, amount, nw_code, CREDIT_MM_CALLBACK_URL, client.client_id, transaction, trans_type, trnx_id, "", reference)
-        # end
+          Transaction.newMobilePayment(mobile_number, amount, nw_code, CREDIT_MM_CALLBACK_URL, client.client_id, transaction, trans_type, trnx_id, "", reference, bank_code, recipient_name)
       else
+
       end
 
-
-      #
       # recipient.disburse_status = true
       # recipient.save
     end
-
-
     #return good response
     output['status'] = true
     output['message'] = "Payout process successfully initiated."
@@ -589,7 +583,7 @@ err_code nw_resp }
     end
   end
 
-  def self.newMobilePayment(customer_number, amt, nw_code, callback_url, client_id, transaction, trans_type = CREDIT, trans_id, voucher_code, reference, sort_code, bank_code, recipient_name)
+  def self.newMobilePayment(customer_number, amt, nw_code, callback_url, client_id, transaction, trans_type, trans_id, voucher_code, reference, bank_code, recipient_name)
     #trnx_type = PN, CR, DR, NW
     url = AMFP_URL
     endpoint = END_POINT
@@ -629,14 +623,26 @@ err_code nw_resp }
 
 
     puts "SENT CALL BACK CREATION BEGUN----------------------"
-    n = SentCallback.create(
+    n =
+      if nw_code == BANK_CODE
+      SentCallback.create(
         mobile_number: customer_number,
-        trnx_type: trans_type,
+        trnx_type: BANK,
         trnx_id: transaction.id,
         amount: amt,
         network: nw_param,
         status: 1,
         )
+      else
+        SentCallback.create(
+          mobile_number: customer_number,
+          trnx_type: trans_type,
+          trnx_id: transaction.id,
+          amount: amt,
+          network: nw_param,
+          status: 1,
+          )
+        end
 
     p "SENT REQUEST OBJECT: #{n.inspect}"
     logger.info "+++++++++++++++++++++#{transaction.inspect}++++++++++++++++++++++++++++++++++++++++"
@@ -686,32 +692,35 @@ err_code nw_resp }
         :callback_url => callback_url,
         :ts => ts,
         :service_id => client_id,
-        :sort_code => sort_code,
         :bank_code => bank_code,
         :recipient_name => recipient_name
       }
-
     else
-      payload = {
-          # :merchant_number=> merchant_number,
-          :customer_number => customer_number,
-          :reference => ref,
-          :amount => amt,
-          :exttrid => transaction.id,
-          :nw => nw_param,
-          :trans_type => trans_type,
-          :callback_url => callback_url,
-          :ts => ts,
-          :client_id => client_id,
-
+    payload = {
+      :customer_number => customer_number,
+      :reference => ref,
+      :amount => amt,
+      :exttrid => transaction.id,
+      :nw => nw_param,
+      :trans_type => trans_type,
+      :callback_url => callback_url,
+      :ts => ts,
+      :client_id => client_id,
       }
     end
 
-    logger.info  json_payload = JSON.generate(payload)
+    json_payload = JSON.generate(payload)
     msg_endpoint = "#{json_payload}"
 
     puts
-    logger.info  msg_endpoint
+
+    logger.info "############################################################################################################################################"
+    logger.info "############################################################################################################################################"
+    logger.info "############################################################################################################################################"
+    logger.info "\n\n\n #################### payload description for either bank or momo. the entire endpoint payload  #{msg_endpoint} \n\n\n"
+    logger.info "############################################################################################################################################"
+    logger.info "############################################################################################################################################"
+
     puts
 
     signature = computeSignature(secret_key, msg_endpoint)
@@ -838,10 +847,10 @@ err_code nw_resp }
 
 
         readVal = readVal.split(',').map {|val| val.strip}
-        last = readVal[6].split("\n")
+        last = readVal[5].split("\n")
         last[0] = last[0].strip
-        if last[0] == "bank_code\r"
-          last[0] = "bank_code"
+        if last[0] == "alert_number\r"
+          last[0] = "alert_number"
         end
         logger.info "First: #{readVal[0].inspect}"
         logger.info "Second: #{readVal[1].inspect}"
@@ -853,7 +862,7 @@ err_code nw_resp }
         logger.info "HERE IS THE READVAL THINGY #{readVal.inspect}"
 
 
-        if readVal[0] == "recipient_name" && readVal[1] == "mobile_number" && readVal[2] == "network" && readVal[3] == "amount" && readVal[4] == "sort_code" && readVal[5] == "swift_code" && last[0] == "bank_code"
+        if readVal[0] == "recipient_name" && readVal[1] == "mobile_number" && readVal[2] == "network" && readVal[3] == "amount" && readVal[4] == "bank_code" && last[0] == "alert_number"
           CSV.foreach(file.path, headers: true) do |row|
             logger.info 'This is it-----'
             logger.info row.inspect
@@ -909,11 +918,16 @@ err_code nw_resp }
                 end
 
               elsif row["network"] == "BNK"
-                if row["sort_code"].present? && row["swift_code"].present? && row["bank_code"].present?
+                if row["bank_code"].present? && row["alert_number"].present?
                   mob_num = row["mobile_number"]
-                  mob_num = mob_num.to_f.to_i.to_s
-                  logger.info " the mob is #{mob_num}@@@@@@@@@@@"
-                  @recipients << Recipient.new(recipient_name: name, mobile_number: mob_num, network: row["network"], csv_uploads_id: csv_upload_id, amount: row['amount'], disburse_status: false, client_code: client_code,sort_code: row['sort_code'], swift_code: row['swift_code'], bank_code:row['bank_code'], user_id: user_id, reference: ref )
+                  fone_num = phone_formatter(row["alert_number"])
+                  if fone_num.blank? || !fone_num.match(positive_numbers)
+                    return the_msg = 12
+                  end
+                  # mob_num = mob_num.to_f.to_i.to_s
+                  mob_num = mob_num.to_s
+                  logger.info " the mob is #{mob_num} @@@@@@@@@@@"
+                  @recipients << Recipient.new(recipient_name: name, mobile_number: mob_num, network: row["network"], csv_uploads_id: csv_upload_id, amount: row['amount'], disburse_status: false, client_code: client_code, bank_code:row['bank_code'], user_id: user_id, reference: ref, phone_number: fone_num )
                 else
                   the_msg = 11
                 end

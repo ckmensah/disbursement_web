@@ -45,6 +45,7 @@
               <i class="icon ion-ios-briefcase-outline tx-purple"></i>
               <div class="media-body">
                 <h1><%= "GH₵ #{@get_current_balance['payout_bal']}" %></h1>
+<!--                <h1><%#= "GH₵ #{@get_current_balance['available_collect_bal']['main_bal']}" %></h1>-->
                 <p>Wallet Balance</p>
               </div><!-- media-body -->
             </div><!-- media -->
@@ -61,6 +62,16 @@
             </div><!-- media -->
           </div><!-- card -->
         </div><!-- col-3 -->
+
+        <div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
+          <div class="card card-status">
+            <div class="media">
+              <div class="media-body">
+                <%= link_to '<i class="fa fa-calendar mg-r-5"></i> Schedule Payout'.html_safe, new_transaction_path, class: "w3-btn w3-text-white btn-block",style: "background-color: #f95f35 !important;", data: {disable_with: 'Please wait'}, :remote => true %>
+              </div>
+            </div>
+          </div>
+        </div>
 <!--        <div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">-->
 <!--          <div class="card card-status">-->
 <!--            <div class="media">-->

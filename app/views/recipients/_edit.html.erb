@@ -27,7 +27,7 @@
       <%# pass it on  %>
       <!--        </div>-->
 
-      <%#= f.input :user_id, as: :hidden , input_html:{value: current_user.id } %>
+      <%= f.input :user_id, as: :hidden , input_html:{value: current_user.id } %>
       <%= f.input :client_code, as: :hidden, input_html: {value: current_user.client_code} %>
       <%= f.input :disburse_status, as: :hidden, input_html: {value: 0} %>
     </div>

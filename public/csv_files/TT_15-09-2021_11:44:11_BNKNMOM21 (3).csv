@@ -1,0 +1,5 @@
+recipient_name,mobile_number,network,amount,sort_code,swift_code,bank_code
+Clara,248021199,MTN,0.01,,,
+Kwadwo Boafo,201659215,VOD,0.01,,,
+Ken Arthur,1.44E+12,BNK,1,130106,ECOCGHAC,ECOC
+Samuel Ampadu,911057158,BNK,1,30109,BARCGHAC,BARC

@@ -4,18 +4,27 @@
     <div class="row">
       <% session[:group_id] = @group_id %>
       <div class="col-md-3" style="padding-right: 4px">
-        <%= f.input :recipient_name, label: false, required: true, autofocus: true, placeholder: "Recipient Name", input_html: {class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
+        <%= f.input :recipient_name, label: false, required: true, autofocus: true, placeholder: "Recipient Name/ Account Name", input_html: {class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
       </div>
 
       <div class="col-md-3" style="padding-right: 4px">
-        <%= f.input :mobile_number, label: false, required: true, autofocus: true, placeholder: "Mobile Number", input_html: {class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
+        <%= f.input :mobile_number, label: false, required: true, autofocus: true, placeholder: "Mobile Number/ Account Number", input_html: {class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
       </div>
       <div class="col-md-2" style="padding-left: 4px; padding-right: 4px">
-        <%= f.input :network, label: false, collection: ["AIR", "MTN", "VOD", "TIG"].insert(0, '--network--'), selected: 0, placeholder: "Network", required: true, autofocus: true, input_html: {class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
+        <%= f.input :network, label: false, collection: ["AIR", "MTN", "VOD", "TIG", "BNK"].insert(0, '--network--'), selected: 0, placeholder: "Network", required: true, autofocus: true, input_html: {class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
       </div>
       <div class="col-md-2" style="padding-left: 4px; padding-right: 4px">
         <%= f.input :amount, label: false, required: true, autofocus: true, placeholder: "Amount", input_html: {class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
       </div>
+
+      <div class="col-md-2" style="padding-left: 4px; padding-right: 4px">
+        <%= f.input :bank_code, label: false, required: true, autofocus: true, placeholder: "Bank Code", input_html: {class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
+      </div>
+
+      <div class="col-md-2" style="padding-left: 4px; padding-right: 4px">
+        <%= f.input :phone_number, label: false, required: true, autofocus: true, placeholder: "Alert Number", input_html: {class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>
+      </div>
+      
       <div class="col-md-2" style="padding-left: 4px; padding-right: 0px">
         <%# unless @recipient.persisted? %>
         <%= f.input :group_id, as: :hidden, input_html: {value: @group_id, class: "form-control", style: "padding-left: 0; padding-right: 2px"} %>

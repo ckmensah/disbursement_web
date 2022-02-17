@@ -40,7 +40,10 @@ class RecipientsController < ApplicationController
     else
       @user_app = PremiumClient.active.where(user_id: current_user.id).order('updated_at DESC')[0]
     end
-    @group_id = params[:group_id]
+
+    logger.info " @@@@@@@@@@@@@@  #{@user_app.inspect} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+
+   @group_id = params[:group_id]
 
 
     @recipient = Recipient.new
@@ -95,6 +98,9 @@ class RecipientsController < ApplicationController
 
     group_id = session.delete(:group_id)
 
+    user_id = current_user.id
+    client = current_user.client_code
+
     status = 1
 
     # entity_id = current_user.entity_id
@@ -106,15 +112,18 @@ class RecipientsController < ApplicationController
 
         format.html {redirect_to request.referer, :locals => {error_code: @error_code}}
       else
-        the_feed_back = Recipient.import_contacts(params[:file], group_id)
+        the_feed_back = Recipient.import_contacts(params[:file], group_id, client, user_id)
         if the_feed_back.to_i == 0
           format.html {redirect_to request.referer, notice: 'Recipients were successfully Imported.'}
         elsif the_feed_back.to_i == 2
           format.html {redirect_to request.referer, alert: 'Wrong file headers. Please download the sample csv file for the right headers'}
         elsif the_feed_back.to_i == 1
-
           format.html {redirect_to request.referer, notice: 'Recipients were successfully imported with some issues.'}
-
+        elsif the_feed_back.to_i == 3
+          format.html {redirect_to request.referer, alert: 'Bank code or alert number cannot be blank for bank recipient.'}
+        elsif the_feed_back.to_i == 4
+          format.html {redirect_to request.referer, alert: 'Invalid alert number for bank recipient.'}
+        else
         end
       end
     end
@@ -575,7 +584,7 @@ class RecipientsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def recipient_params
-    params.require(:recipient).permit(:disburse_status, :transaction_id, :mobile_number, :network, :amount, :csv_uploads_id, :group_id, :status, :changed_status, :client_code, :user_id, :swift_code,:sort_code, :bank_code, :recipient_name)
+    params.require(:recipient).permit(:disburse_status, :transaction_id, :mobile_number, :network, :amount, :csv_uploads_id, :group_id, :status, :changed_status, :client_code, :user_id, :swift_code,:sort_code, :bank_code, :recipient_name, :phone_number)
   end
 end
 

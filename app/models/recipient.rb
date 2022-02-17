@@ -43,23 +43,26 @@ class Recipient < ActiveRecord::Base
   end
 
   #########################################################################################
-  def self.import_contacts(file, group_id)
+  def self.import_contacts(file, group_id, client, user_id)
+    positive_numbers = /^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$/
     @recipients = []
     networks = ['MTN', 'AIR', 'TIG', 'VOD']
     #mobile_number, network, amount
     the_msg = 0
     readVal = file.read
     readVal = readVal.split(',').map {|val| val.strip}
-    last = readVal[3].split("\n")
+    last = readVal[5].split("\n")
     last[0] = last[0].strip
-    if last[0] == "amount\r"
-      last[0] = "amount"
+    if last[0] == "alert_number\r"
+      last[0] = "alert_number"
     end
 
     logger.info "Last: #{last.inspect}"
     logger.info "HERE IS THE READVAL THINGY #{readVal.inspect}"
 
-    if readVal[0] == "recipient_name" && readVal[1] == "mobile_number" && readVal[2] == "network" && last[0] == "amount"
+    # if readVal[0] == "recipient_name" && readVal[1] == "mobile_number" && readVal[2] == "network" && last[0] == "amount"
+    if readVal[0] == "recipient_name" && readVal[1] == "mobile_number" && readVal[2] == "network" && readVal[3] == "amount" && readVal[4] == "bank_code" && last[0] == "alert_number"
+
       CSV.foreach(file.path, headers: true) do |row|
         logger.info 'This is it-----'
         logger.info row.inspect
@@ -67,9 +70,8 @@ class Recipient < ActiveRecord::Base
 #Recipient name, mobile_number, network, amount
         if row["mobile_number"].present? && row["network"].present? && row["amount"].present? && row["recipient_name"].present?
 
-          if row["mobile_number"].scan(/\D/i).length == 0
+          if row["network"] != "BNK" && row["mobile_number"].scan(/\D/i).length == 0
             number = phone_formatter(row["mobile_number"])
-
             number = 0 unless number
 
             network = row['network'].upcase
@@ -99,13 +101,52 @@ class Recipient < ActiveRecord::Base
                   the_msg = 1
                   Recipient.create(recipient_name: name, mobile_number: number, group_id: group_id, status: false, fail_reason: "Mobile money number already exists")
                 else
-                  @recipients << Recipient.new(recipient_name: name, mobile_number: number, network: network, amount: row['amount'], group_id: group_id)
+                  @recipients << Recipient.new(recipient_name: name, mobile_number: number, network: network, amount: row['amount'], group_id: group_id, client_code: client, user_id: user_id)
+                  logger.info " these are the recipients created ############ #{@recipients.inspect} ###########################"
+
                 end
               end
             else
               the_msg = 1
               Recipient.create(recipient_name: name, mobile_number: number, network: network, group_id: group_id, status: false, fail_reason: "Wrong mobile number")
             end
+
+            elsif row["network"] == "BNK"
+              if row["bank_code"].present? && row["alert_number"].present? && row["alert_number"].scan(/\D/i).length == 0
+                mob_num = row["mobile_number"]
+                fone_num = phone_formatter(row["alert_number"])
+                name = User.titling(row['recipient_name']) #name
+                logger.info "NAME: #{name}"
+
+                if fone_num.blank? || !fone_num.match(positive_numbers)
+                  return the_msg = 3
+                end
+
+                mob_num = mob_num.to_s
+                logger.info " the mob is #{mob_num.inspect} @@@@@@@@@@@"
+
+                if mob_num.match(positive_numbers)
+                  check = Recipient.where(mobile_number: mob_num, network: row["network"], group_id: group_id,  bank_code: row['bank_code'], phone_number: fone_num).exists?
+                  if check
+                    the_msg = 1
+                  else
+                    final_check = Recipient.where(mobile_number: mob_num, network: row["network"], group_id: group_id,  bank_code: row['bank_code'], phone_number: fone_num).exists?
+                    if final_check
+                      the_msg = 1
+                      Recipient.create(recipient_name: name, mobile_number: mob_num, group_id: group_id, status: false, fail_reason: "Account Number already exists. Please check and change it.")
+                    else
+                      @recipients << Recipient.new(recipient_name: name, mobile_number: mob_num, network: row["network"], group_id: group_id, amount: row['amount'], bank_code: row['bank_code'], phone_number: fone_num, client_code: client, user_id: user_id )
+                      logger.info "############ #{@recipients.inspect} ###########################"
+
+                  end
+                  end
+                end
+
+              else
+                the_msg = 4
+              end
+
+
           else
             the_msg = 1
             Recipient.create(recipient_name: name, mobile_number: number, network: network, group_id: group_id, status: false, fail_reason: "Wrong mobile number format")

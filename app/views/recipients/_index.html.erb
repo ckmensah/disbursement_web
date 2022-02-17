@@ -5,10 +5,12 @@
 <table class="table table-striped table-hover table-bordered">
 
   <tr id="head">
-    <th>Name</th>
-    <th>Mobile number</th>
+    <th>Name/Account Name </th>
+    <th>Mobile number/ Account Number</th>
     <th>Network</th>
     <th>Amount</th>
+    <th>Alert number</th>
+    <th>Bank Code</th>
     <% if @user_app.needs_approval %>
       <th>Group</th>
     <% elsif !@user_app.needs_approval %>
@@ -26,6 +28,8 @@
       <td><%= recipient.mobile_number %></td>
       <td><%= recipient.network %></td>
       <td><%= recipient.amount %></td>
+      <td><%= recipient.phone_number %></td>
+      <td><%= recipient.bank_code %></td>
       <% if @user_app.needs_approval %>
         <td><%= recipient.group.group_desc if recipient.group %></td>
       <% elsif !@user_app.needs_approval %>

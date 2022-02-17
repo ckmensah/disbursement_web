@@ -5,7 +5,10 @@
 
     <div class="row">
       <div class="bg-info">
-        Click <%= link_to 'Here', sample_csv_path %> to download a sample csv file. All fields are required.
+        <p>Click <%= link_to 'Here', sample_csv_path %> to download a sample csv file. All fields are required.</p> <br>
+       <p>Click <%= link_to 'Here', bank_sample_csv_path %> to download a sample csv file if the list of recipients will receive their funds through bank, for the list of bank codes to use.</p>
+        <p style="font-size: 15px"> For Bank payouts please input all leading zeros if the account number begins with zeros and also make that column in your csv file text format by default before uploading.</p>
+
       </div>
         <div class="col-md-4">
           <%= file_field_tag :file, accept: '.csv', require: true, class:"form-control", label: false, boolean_style: :inline, input_html: {class: "form-control",height: "auto"} %>
